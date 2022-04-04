@@ -1,0 +1,6 @@
+
+requests_oauth2
+udi_interface>=3.0.24
+git+https://github.com/jrester/tesla_powerwall#egg=tesla_powerwall
+#git+https://github.com/maraujop/requests-oauth2#egg=requests-oauth2
+requests>=2.22.0

@@ -1,0 +1,104 @@
+ND-controller-NAME = Tesla PowerWall Info
+ND-controller-ICON = Electricity
+CMD-nlscontroller-UPDATE-NAME = Update System Data
+ST-nlscontroller-ST-NAME = Controller Up
+ST-nlscontroller-GV2-NAME = Connected to Tesla Power Wall
+CTRL_2-0 = False
+CTRL_2-1 = True
+ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
+
+ND-pwstatus-NAME = Power Wall Status
+ND-pwstatus-ICON = Electricity
+CMD-nlspwstatus-UPDATE-NAME = Update System Data
+ST-nlspwstatus-GV1-NAME = Battery Charge Level
+ST-nlspwstatus-GV2-NAME = Operation Mode
+PWSTATUS2-0 = backup
+PWSTATUS2-1 = self_consumption
+PWSTATUS2-2 = autonomous
+PWSTATUS2-3 = site_ctrl
+ST-nlspwstatus-GV3-NAME = Grid Status
+PWSTATUS3-0 = on_grid
+PWSTATUS3-1 = islanded_ready
+PWSTATUS3-2 = islanded
+PWSTATUS3-3 = transition ot grid
+ST-nlspwstatus-GV4-NAME = Connected to Tesla
+PWSTATUS4-0 = False
+PWSTATUS4-1 = True
+ST-nlspwstatus-GV5-NAME = Grid Services Active
+PWSTATUS5-0 = False
+PWSTATUS5-1 = True
+ST-nlspwstatus-GV6-NAME = Current Battery Supply
+ST-nlspwstatus-GV7-NAME = Battery Power Today
+ST-nlspwstatus-GV8-NAME = Battery Power Yesterday
+ST-nlspwstatus-GV9-NAME = Current Grid Supply
+ST-nlspwstatus-GV10-NAME = Power Consumed Today
+ST-nlspwstatus-GV11-NAME = Power Consumed Yesterday
+ST-nlspwstatus-GV12-NAME = Current Load
+ST-nlspwstatus-GV13-NAME = Total Power Today
+ST-nlspwstatus-GV14-NAME = Total Power Yesterday
+ST-nlspwstatus-GV15-NAME = Generated Power Today
+ST-nlspwstatus-GV16-NAME = Generated Power Yesterday
+ST-nlspwstatus-GV17-NAME = Grid Service Power Today
+ST-nlspwstatus-GV18-NAME = Grid Service Power Yesterday
+
+ND-pwsolar-NAME = Power Wall Solar Status
+ND-pwsolar-ICON = Electricity
+CMD-nlspwsolar-UPDATE-NAME = Update System Data
+ST-nlspwsolar-GV1-NAME = Current Solar Supply
+ST-nlspwsolar-GV2-NAME = Solar Power Today
+ST-nlspwsolar-GV3-NAME = Solar Power Yesterday
+
+ND-pwgenerator-NAME = Power Wall Generator Status
+ND-pwgenerator-ICON = Electricity
+CMD-nlspwgen-UPDATE-NAME = Update System Data
+ST-nlspwgen-GV1-NAME = Generator Power Today
+ST-nlspwgen-GV2-NAME = Generator Power Yesterday
+
+ND-pwsetup-NAME = Power Wall Control Parameters
+ND-pwsetup-ICON = Electricity
+CMD-nlspwsetup-BACKUP_PCT-NAME =  Backup Reserve (%)
+CMD-nlspwsetup-OP_MODE-NAME = Operating Mode
+CMD-nlspwsetup-STORM_MODE-NAME = Storm Mode
+CMD-nlspwsetup-TOU_MODE-NAME =  Time of Use Mode
+CMD-nlspwsetup-WE_O_PEAK_START-NAME = Weekend Off-peak Start time (sec)
+CMD-nlspwsetup-WE_O_PEAK_END-NAME = Weekend Off-peak End time (sec)
+CMD-nlspwsetup-WE_PEAK_START-NAME = Weekend Peak Start time (sec)
+CMD-nlspwsetup-WE_PEAK_END-NAME = Weekend Peak End time (sec)
+CMD-nlspwsetup-WK_O_PEAK_START-NAME = Weekday Off-peak Start time (sec)
+CMD-nlspwsetup-WK_O_PEAK_END-NAME = Weekday Off-peak End time (sec)
+CMD-nlspwsetup-WK_PEAK_START-NAME = Weekday Peak Start time (sec)
+CMD-nlspwsetup-WK_PEAK_END-NAME = Weekday Peak End time (sec)
+CMD-nlspwsetup-UPDATE-NAME = Update System Data
+
+ST-nlspwsetup-GV1-NAME = Backup Reserve (%)
+ST-nlspwsetup-GV2-NAME =  Operating Mode
+ST-nlspwsetup-GV3-NAME =  Storm Mode
+ST-nlspwsetup-GV4-NAME = Time of Use Mode
+ST-nlspwsetup-GV5-NAME = Weekend Off-peak Start Time (sec)
+ST-nlspwsetup-GV6-NAME = Weekend Off-peak End Time (sec)
+ST-nlspwsetup-GV7-NAME = Weekend Peak Start Time (sec)
+ST-nlspwsetup-GV8-NAME = Weekend Peak Start End (sec)
+ST-nlspwsetup-GV9-NAME = Weekday Off-peak Start Time (sec)
+ST-nlspwsetup-GV10-NAME = Weekday Off-peak End Time (sec)
+ST-nlspwsetup-GV11-NAME = Weekday Peak Start Time (sec)
+ST-nlspwsetup-GV12-NAME = Weekday Peak End Time (sec)
+
+EN_TOGGLE-0 = Disabled
+EN_TOGGLE-1 = Enabled
+
+EN_MODE-0 = backup
+EN_MODE-1 = self consumption
+EN_MODE-2 = autonomous
+EN_MODE-3 = site control
+
+EN_TOU_MODE-0 = economics
+EN_TOU_MODE-1 = balanced
+
+EN_GRID_STATUS-0 = on grid
+EN_GRID_STATUS-1 = islanded ready
+EN_GRID_STATUS-2 = islanded
+EN_GRID_STATUS-3 = transition to grid
+
+EN_ONLINE-0 = off line
+EN_ONLINE-1 = on line
+EN_ONLINE-2 = unknown

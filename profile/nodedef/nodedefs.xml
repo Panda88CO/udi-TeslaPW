@@ -1,0 +1,142 @@
+<nodeDefs> 
+   <nodeDef id="controller" nls="nlscontroller">
+      <editors />
+      <sts>
+         <st id="ST" editor="CTRL_1" />
+         <st id="GV2" editor="CTRL_2" />
+         <st id="GV3" editor="CTRL_3" />
+      </sts>
+      <cmds>
+         <sends>
+            <cmd id="DON" /> 
+            <cmd id="DOF" /> 
+         </sends>
+         <accepts>
+            <cmd id="UPDATE" /> 
+         </accepts>
+      </cmds>
+   </nodeDef> 
+
+   <nodeDef id="pwstatus" nls="nlspwstatus">
+      <editors />
+      <sts>
+         <st id="GV1" editor="PERCENT" />
+         <st id="GV2" editor="OP_MODE" />
+         <st id="GV3" editor="GRID_ST" />
+         <st id="GV4" editor="ON_LINE" />
+         <st id="GV5" editor="TOGGLE" />
+         <st id="GV6" editor="KWH_20" />
+         <st id="GV7" editor="KWH" />
+         <st id="GV8" editor="KWH" />
+         <st id="GV9" editor="KWH" />
+         <st id="GV10" editor="KWH" />
+         <st id="GV11" editor="KWH" />
+         <st id="GV12" editor="KWH" />
+         <st id="GV13" editor="KWH" />
+         <st id="GV14" editor="KWH" />
+         <st id="GV15" editor="KWH" />
+         <st id="GV16" editor="KWH" />
+         <st id="GV17" editor="KWH" />
+         <st id="GV18" editor="KWH" />
+      </sts>
+      <cmds>
+         <sends>
+         </sends>
+         <accepts>
+            <cmd id="UPDATE" /> 
+         </accepts>
+      </cmds>
+   </nodeDef> 
+
+   <nodeDef id="pwsolar" nls="nlspwsolar">
+      <editors />
+      <sts>
+         <st id="GV1" editor="KWH_LOW" />
+         <st id="GV2" editor="KWH" />
+         <st id="GV3" editor="KWH" />
+      </sts>
+      <cmds>
+         <sends>
+         </sends>
+         <accepts>
+            <cmd id="UPDATE" /> 
+         </accepts>
+      </cmds>
+   </nodeDef> 
+
+   <nodeDef id="pwgenerator" nls="nlspwgen">
+      <editors />
+      <sts>
+         <st id="GV1" editor="KWH" />
+         <st id="GV2" editor="KWH" />
+      </sts>
+      <cmds>
+         <sends>
+         </sends>
+         <accepts>
+            <cmd id="UPDATE" /> 
+         </accepts>
+      </cmds>
+   </nodeDef> 
+
+   <nodeDef id="pwsetup" nls="nlspwsetup">
+      <editors />
+      <sts>
+         <st id="GV1" editor="PERCENT" />
+         <st id="GV2" editor="OP_MODE" />
+         <st id="GV3" editor="TOGGLE" />
+         <st id="GV4" editor="TOU_MODE" />
+         <st id="GV5" editor="TIME" />
+         <st id="GV6" editor="TIME" />
+         <st id="GV7" editor="TIME" />
+         <st id="GV8" editor="TIME" />
+         <st id="GV9" editor="TIME" />
+         <st id="GV10" editor="TIME" />
+         <st id="GV11" editor="TIME" />
+         <st id="GV12" editor="TIME" />
+      </sts>
+      <cmds>
+         <sends>
+         </sends>
+         <accepts>
+            <cmd id="BACKUP_PCT" > 
+               <p id="" editor="PERCENT" init="GV1" /> 
+            </cmd> 
+            <cmd id="OP_MODE" > 
+               <p id="" editor="OP_MODE" init="GV2" /> 
+            </cmd> 
+            <cmd id="STORM_MODE" > 
+               <p id="" editor="TOGGLE" init="GV3" /> 
+            </cmd> 
+            <cmd id="TOU_MODE" > 
+               <p id="" editor="TOU_MODE" init="GV4" /> 
+            </cmd> 
+            <cmd id="WE_O_PEAK_START" > 
+               <p id="" editor="TIME" init="GV5" /> 
+            </cmd> 
+            <cmd id="WE_O_PEAK_END" > 
+               <p id="" editor="TIME" init="GV6" /> 
+            </cmd> 
+            <cmd id="WE_PEAK_START" > 
+               <p id="" editor="TIME" init="GV7" /> 
+            </cmd> 
+            <cmd id="WE_PEAK_END" > 
+               <p id="" editor="TIME" init="GV8" /> 
+            </cmd> 
+            <cmd id="WK_O_PEAK_START" > 
+               <p id="" editor="TIME" init="GV9" /> 
+            </cmd> 
+            <cmd id="WK_O_PEAK_END" > 
+               <p id="" editor="TIME" init="GV10" /> 
+            </cmd> 
+            <cmd id="WK_PEAK_START" > 
+               <p id="" editor="TIME" init="GV11" /> 
+            </cmd> 
+            <cmd id="WK_PEAK_END" > 
+               <p id="" editor="TIME" init="GV12" /> 
+            </cmd> 
+            <cmd id="UPDATE" /> 
+         </accepts>
+      </cmds>
+   </nodeDef> 
+</nodeDefs> 
