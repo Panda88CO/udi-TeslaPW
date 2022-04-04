@@ -14,7 +14,6 @@ except ImportError:
     logging.basicConfig(level=30)
 
 
-
 class teslaCloudApi(object):
 
     def __init__(self, refreshToken):
