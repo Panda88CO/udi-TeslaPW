@@ -7,6 +7,7 @@ try:
 except ImportError:
     import logging
     logging.basicConfig(level=30)
+import time
                
 class teslaPWGenNode(udi_interface.Node):
 

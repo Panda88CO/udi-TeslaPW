@@ -1,6 +1,6 @@
 {
     "name": "TeslaPowerWall-pg3",
-    "docs": "https://github.com/Panda88CO/udi-TeslaPWpgv3",
+    "docs": "https://github.com/Panda88CO/udi-TeslaPW",
     "type": "python3",
     "executable": "TeslaPWController.py",
     "install": "install.sh",
@@ -22,8 +22,8 @@
             "author": "Panda88CO",
             "version": "0.1.5",
             "date": "Feb12,  2022",
-            "source": "https://github.com/Panda88CO/udi-TeslaPWpgv3",
-            "license": "https://github.com/Panda88CO/udi-TeslaPWpgv3/blob/main/license"
+            "source": "https://github.com/Panda88CO/udi-TeslaPW",
+            "license": "https://github.com/Panda88CO/udi-TeslaPW/blob/main/license"
         }
     ]
 }

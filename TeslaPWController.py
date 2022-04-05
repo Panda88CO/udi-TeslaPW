@@ -12,6 +12,7 @@ try:
     import udi_interface
     logging = udi_interface.LOGGER
     Custom = udi_interface.Custom
+    ISY = udi_interface.ISY
 except ImportError:
     import logging
     logging.basicConfig(level=30)
@@ -30,14 +31,20 @@ class TeslaPWController(udi_interface.Node):
         self.localAccess = False
         self.initialized = False
         self.Rtoken = None
+
+        self.Parameters = Custom(polyglot, 'customParams')
+        self.Notices = Custom(polyglot, 'notices')
+
         self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(self.poly.LOGLEVEL, self.handleLevelChange)
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.handleParams)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
-        
-        self.Parameters = Custom(polyglot, 'customparams')
-        self.Notices = Custom(polyglot, 'notices')
+        #self.poly.subscribe(self.poly.CONFIGDONE, self.check_config)
+
+        self.n_queue = []
+
+
        
         logging.debug('self.address : ' + str(self.address))
         logging.debug('self.name :' + str(self.name))
@@ -68,13 +75,13 @@ class TeslaPWController(udi_interface.Node):
        
         logging.debug('start')
         self.poly.updateProfile()
-        self.poly.setCustomParamsDoc()
+        #self.poly.setCustomParamsDoc()
         # Wait for things to initialize....
 
         while not self.initialized:
             time.sleep(1)
-
-        if self.cloudAccess or self.localAccessl:
+        self.check_config()
+        if self.cloudAccess or self.localAccess:
             self.tesla_initialize(self.local_email, self.local_password, self.local_ip, self.Rtoken)
         else:
             self.poly.Notices['cfg'] = 'Tesla PowerWall NS needs configuration.'
@@ -83,6 +90,18 @@ class TeslaPWController(udi_interface.Node):
         self.updateISYdrivers('all')
         self.TPW.systemReady = True
    
+
+    def check_config(self):
+        logging.debug('check_config')
+        if self.local_email == '':
+            self.Parameters['LOCAL_EMAIL'] = ''
+        if self.local_password == '':
+            self.Parameters['LOCAL_PASSWORD'] = ''
+        if self.local_ip == '':
+            self.Parameters['LOCAL_IP_ADDRESS'] = ''
+        if self.Rtoken == '':
+            self.Parameters['REFRESH_TOKEN'] = ''                        
+
 
 
     '''
@@ -93,7 +112,7 @@ class TeslaPWController(udi_interface.Node):
     def tesla_initialize(self, local_email, local_password, local_ip, Rtoken):
         logging.debug('starting Login process')
         try:
-            #del self.Parameters['REFRESH_TOKEN']
+
             self.TPW = tesla_info(self.name, self.address, self.localAccess, self.cloudAccess)
             if self.localAccess:
                 logging.debug('Attempting to log in via local auth')
@@ -165,54 +184,87 @@ class TeslaPWController(udi_interface.Node):
     def handleLevelChange(self, level):
         logging.info('New log level: {}'.format(level))
 
-    def handleParams (self, customParam ):
+    def handleParams (self, customParams ):
         logging.debug('handleParams')
         supportParams = ['LOCAL_USER_EMAIL','LOCAL_USER_PASSWORD','LOCAL_IP_ADDRESS', 'REFRESH_TOKEN'   ]
-        self.Parameters.load(customParam)
+        
+        self.Parameters.load(customParams)
 
-        logging.debug('handleParams load')
-        #logging.debug(self.Parameters)  ### TEMP
+        #while customParams == None:
+        #    logging.debug('handleParams load')
+        #    time.sleep(1)
+        #    #self.Parameters.load(customParams)
+        
         self.poly.Notices.clear()
         cloud_valid = False
         local_valid = False
         self.localAccess = False
         self.cloudAccess = False
-        for param in customParam:
+        #temp = self.Parameters
+        '''
+        for param in customParams:
             if param not in supportParams:
                 del self.Parameters[param]
                 logging.debug ('erasing key: ' + str(param))
+        '''
 
+        if self.Parameters.LOCAL_USER_EMAIL == None or self.Parameters.LOCAL_USER_EMAIL == '':
+            self.poly.Notices['lu'] = 'Missing Local User Email parameter (LOCAL_USER_EMAIL)'
+            self.local_email = ''
+        else:
+            self.local_email = self.Parameters.LOCAL_USER_EMAIL
+            self.poly.Notices.delete('lu')    
 
-        if 'LOCAL_USER_EMAIL' in customParam:
-            self.local_email = customParam['LOCAL_USER_EMAIL']
+        if self.Parameters.LOCAL_USER_PASSWORD == None or self.Parameters.LOCAL_USER_PASSWORD == '':
+            self.poly.Notices['lp'] =  'Missing Local User Password parameter (LOCAL_USER_PASSWORD)'
+            self.local_password = ''
+        else:
+            self.local_password = self.Parameters.LOCAL_USER_PASSWORD
+            self.poly.Notices.delete('lp')    
+
+        if self.Parameters.LOCAL_IP_ADDRESS == None or self.Parameters.LOCAL_IP_ADDRESS == '':
+            self.poly.Notices['ip'] = 'Missing Local IP Address parameter (LOCAL_IP_ADDRESS)'
+            self.local_ip = ''
+        else:
+            self.local_ip = self.Parameters.LOCAL_IP_ADDRESS 
+            self.poly.Notices.delete('ip')    
+
+        if self.Parameters.REFRESH_TOKEN == None or self.Parameters.REFRESH_TOKEN == '':
+            self.poly.Notices['ct'] = 'Missing Cloud Refresh Token (REFRESH_TOKEN)'
+            self.Rtoken = ''
+        else:
+            self.Rtoken = self.Parameters.REFRESH_TOKEN 
+            self.poly.Notices.delete('ct')    
+ 
+            
+
+        '''  
+        if 'LOCAL_USER_EMAIL' in self.Parameters:
+            self.local_email = self.Parameters['LOCAL_USER_EMAIL']
         else:
             self.poly.Notices['lu'] = 'Missing Local User Email parameter'
             self.local_email = ''
-            #self.Parameters['LOCAL_USER_EMAIL']  = local_email
-            
-        if 'LOCAL_USER_PASSWORD' in customParam:
-            self.local_password = customParam['LOCAL_USER_PASSWORD']
+        
+        if 'LOCAL_USER_PASSWORD' in customParams:
+            self.local_password = self.Parameters['LOCAL_USER_PASSWORD']
         else:
             self.poly.Notices['lp'] = 'Missing Local User Password parameter'
             self.local_password = ''
-            #self.Parameters['LOCAL_USER_PASSWORD']  = local_password
 
-        if  'LOCAL_IP_ADDRESS' in customParam:
+        if  'LOCAL_IP_ADDRESS' in customParams:
             self.local_ip = self.Parameters['LOCAL_IP_ADDRESS']
         else:
             self.poly.Notices['ip'] = 'Missing Local IP Address parameter'
             self.local_ip = ''
-            #self.Parameters['LOCAL_IP_ADDRESS']  = local_ip
 
-
-        if 'REFRESH_TOKEN' in customParam:
+        if 'REFRESH_TOKEN' in customParams:
             self.Rtoken = self.Parameters['REFRESH_TOKEN']
             if self.Rtoken  == '':
                 self.poly.Notices['ct'] = 'Missing Cloud Refresh Token'
             else:
                 if 'ct' in self.poly.Notices:
                     self.poly.Notices.delete('ct')      
-            '''
+            
             cloud_token = customParam['REFRESH_TOKEN']
             if cloud_token != '':
                 if (os.path.exists('./inputToken.txt')):
@@ -251,7 +303,7 @@ class TeslaPWController(udi_interface.Node):
                     self.Rtoken = dataFile.read()
                     cloud_token = self.Rtoken
                     dataFile.close()
-            '''
+            
         else:
             self.poly.Notices['ct'] = 'Missing Cloud Refresh Token'
             cloud_token = ''
@@ -276,7 +328,7 @@ class TeslaPWController(udi_interface.Node):
             if cloud_token == '':
                 self.poly.Notices['ct'] = 'Please enter the Tesla Refresh Token - see readme for futher info '
                 cloud_valid = False
-
+        '''
         if local_valid:
             logging.debug('Local access is valid, configure....')
             self.localAccess = True
