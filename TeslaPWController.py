@@ -370,7 +370,7 @@ class TeslaPWController(udi_interface.Node):
             self.hb = 0
         
     def systemPoll(self, pollList):
-        logging.debug('systemPoll')
+        logging.info('systemPoll {}'.format(pollList))
         if self.TPW and self.nodeDefineDone and  self.TPW.systemReady:        
             if 'longPoll' in pollList:
                 self.longPoll()
