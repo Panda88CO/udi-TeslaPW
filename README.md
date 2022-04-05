@@ -1,7 +1,7 @@
-# udi-teslaPW  -  for Polyglot v3 
+# udi-TeslaPW  -  for Polyglot v3 
 
 ## Tesla PW Node server
-# udi-powerwall  -  for Polyglot v3 
+# udi-TeslaPW  -  for Polyglot v3 
 ## Power wall Node server
 The main node displays node status
 Setup node allows configuration of different parameters  (requires cloud access)
