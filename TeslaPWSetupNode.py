@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 
-try:
-    import udi_interface
-    logging = udi_interface.LOGGER
-    Custom = udi_interface.Custom
-except ImportError:
-    import logging
-    logging.basicConfig(level=30)
 import time
 
 try:
