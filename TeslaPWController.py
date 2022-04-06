@@ -397,9 +397,10 @@ class TeslaPWController(udi_interface.Node):
         if self.TPW.pollSystemData('all'):
             for node in self.poly.nodes():
                 node.updateISYdrivers('all')
-            self.Rtoken  = self.TPW.getRtoken()
-            if self.Rtoken  != self.Parameters['REFRESH_TOKEN']:
-                self.Parameters['REFRESH_TOKEN'] = self.Rtoken
+            if self.cloudAccess:
+                self.Rtoken  = self.TPW.getRtoken()
+                if self.Rtoken  != self.Parameters['REFRESH_TOKEN']:
+                    self.Parameters['REFRESH_TOKEN'] = self.Rtoken
         else:
             logging.error ('Problem polling data from Tesla system')
 
