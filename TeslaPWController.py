@@ -49,6 +49,7 @@ class TeslaPWController(udi_interface.Node):
         logging.debug('self.address : ' + str(self.address))
         logging.debug('self.name :' + str(self.name))
         self.hb = 0
+        self.poly.updateProfile()
         
         self.nodeDefineDone = False
         self.longPollCountMissed = 0
