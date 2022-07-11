@@ -35,6 +35,7 @@ class TeslaPWApi():
         self.cloudAccess =  self.connectionEstablished
         self.products = {}
         self.site_id = ''
+        self.Header= {'Accept':'application/json'}
         #self.battery_id = ''
         #self.teslaAuth = TPWauth(self.email, self.password)
 
@@ -178,7 +179,7 @@ class TeslaPWApi():
         with requests.Session() as s:
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])
-                r = s.get(self.TESLA_URL + self.API + "/products")
+                r = s.get(self.TESLA_URL + self.API + "/products", headers=self.Header)
                 products = r.json()
                 return(products)        
             except Exception as e:
@@ -198,7 +199,7 @@ class TeslaPWApi():
                 s.auth = OAuth2BearerToken(S['access_token'])          
                 if mode  in self.OPERATING_MODES:
                     payload = {'default_real_mode': mode}
-                    r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/operation', json=payload)        
+                    r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/operation', headers=self.Header, json=payload)        
                     site = r.json()
                     if site['response']['code'] <210:
                         self.site_info['default_real_mode'] = mode
@@ -226,16 +227,16 @@ class TeslaPWApi():
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])            
                 if mode == 'site_status':
-                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/site_status')          
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/site_status', headers=self.Header)          
                     site = r.json()
                 elif mode == 'site_live':
-                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/live_status')          
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/live_status', headers=self.Header)          
                     site = r.json()
                 elif mode == 'site_info':
-                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/site_info')          
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/site_info', headers=self.Header)          
                     site = r.json()            
                 elif mode == 'site_history_day':
-                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/history', json={'kind':'power', 'period':'day'}) 
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/history', headers=self.Header, json={'kind':'power', 'period':'day'}) 
                     site = r.json()                        
                 else:
                     #logging.debug('Unknown mode: '+mode)
@@ -261,7 +262,7 @@ class TeslaPWApi():
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])
                 payload = {'enabled': EnableBool}
-                r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/storm_mode', json=payload)
+                r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/storm_mode', headers = self.Header, json=payload)
                 site = r.json()
                 if site['response']['code'] <210:
                     self.site_info['user_settings']['storm_mode_enabled'] = EnableBool
@@ -293,7 +294,7 @@ class TeslaPWApi():
                 s.auth = OAuth2BearerToken(S['access_token'])
                 if backupPercent >=0 and backupPercent <=100:
                     payload = {'backup_reserve_percent': backupPercent}
-                    r = s.post(self.TESLA_URL +  self.API + '/energy_sites'+self.site_id +'/backup', json=payload)        
+                    r = s.post(self.TESLA_URL +  self.API + '/energy_sites'+self.site_id +'/backup', headers= self.Header,  json=payload)        
                     site = r.json()
                     if site['response']['code'] <210:
                         self.site_info['backup_reserve_percent'] = backupPercent
@@ -406,7 +407,7 @@ class TeslaPWApi():
                 temp['tou_settings']['optimization_strategy'] = self.touMode
                 temp['tou_settings']['schedule'] = self.touScheduleList
                 payload = temp
-                r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/time_of_use_settings', json=payload)
+                r = s.post(self.TESLA_URL +  self.API+ '/energy_sites'+self.site_id +'/time_of_use_settings', headers=self.Header, json=payload)
                 site = r.json()
                 if site['response']['code'] <210:
                     self.site_info['tou_settings']['optimization_strategy'] = self.touMode
