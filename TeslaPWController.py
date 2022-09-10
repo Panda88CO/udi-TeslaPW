@@ -415,8 +415,18 @@ class TeslaPWController(udi_interface.Node):
                self.longPollCountMissed = 0
             self.setDriver('GV2', value)
             self.setDriver('GV3', self.longPollCountMissed)     
+            if self.cloudAccess == False and self.localAccess == False:
+                self.setDriver('GV4', 0)
+            elif self.cloudAccess == True and self.localAccess == False:
+                self.setDriver('GV4', 1)
+            elif self.cloudAccess == False and self.localAccess == True:
+                self.setDriver('GV4', 2)   
+            elif self.cloudAccess == True and self.localAccess == True:
+                self.setDriver('GV4', 3)   
+
             logging.debug('CTRL Update ISY drivers : GV2  value:' + str(value) )
             logging.debug('CTRL Update ISY drivers : GV3  value:' + str(self.longPollCountMissed) )
+
         elif level == 'critical':
             value = self.TPW.isNodeServerUp()
             self.setDriver('GV2', value)   
@@ -441,14 +451,15 @@ class TeslaPWController(udi_interface.Node):
     drivers = [
             {'driver': 'ST', 'value':0, 'uom':2},
             {'driver': 'GV2', 'value':0, 'uom':25},
-            {'driver': 'GV3', 'value':0, 'uom':71}
+            {'driver': 'GV3', 'value':0, 'uom':71},
+            {'driver': 'GV4', 'value':0, 'uom':25},
             ]
 
 if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.10')
+        polyglot.start('0.1.11')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')

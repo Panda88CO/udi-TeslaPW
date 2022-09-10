@@ -483,7 +483,8 @@ class TeslaPWApi():
                 prevObj = Obj
                 dateStr = data[index]['timestamp']
                 Obj = datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S%z")
-            loadPwr = gridPwr + solarPwr + batteryPwr + generatorPwr # + gridServicesPwr
+            loadPwr = gridPwr + solarPwr + batteryPwr + generatorPwr + gridServicesPwr
+            genPwr = solarPwr + batteryPwr + generatorPwr + gridServicesPwr
 
             ySolarPwr = data[index]['solar_power']*timeFactor
             yBatteryPwr = data[index]['battery_power']*timeFactor
@@ -506,13 +507,14 @@ class TeslaPWApi():
                 dateStr = data[index]['timestamp']
                 Obj = datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S%z")
 
-            yLoadPwr = yGridPwr + ySolarPwr + yBatteryPwr + YGeneratorPwr #gridservices
-
+            yLoadPwr = yGridPwr + ySolarPwr + yBatteryPwr + YGeneratorPwr + yGridServicesPwr
+            ygenPwr = ySolarPwr + yBatteryPwr + YGeneratorPwr + yGridServicesPwr
 
             self.daysConsumption = {'solar_power': solarPwr, 'consumed_power': loadPwr, 'net_power':gridPwr
                                 ,'battery_power': batteryPwr ,'grid_services_power': gridServicesPwr, 'generator_power' : generatorPwr
                                 ,'yesterday_solar_power': ySolarPwr, 'yesterday_consumed_power': yLoadPwr, 'yesterday_net_power':yGridPwr
-                                ,'yesterday_battery_power': yBatteryPwr ,'yesterday_grid_services_power': yGridServicesPwr, 'yesterday_generator_power' : YGeneratorPwr, }
+                                ,'yesterday_battery_power': yBatteryPwr ,'yesterday_grid_services_power': yGridServicesPwr, 'yesterday_generator_power' : YGeneratorPwr, 
+                                'net_generation': genPwr, 'net_generation': ygenPwr}
         
             #print(self.daysConsumption)
             return(True)
@@ -528,7 +530,7 @@ class TeslaPWApi():
         return(self.daysConsumption['consumed_power'])
 
     def teslaExtractDaysGeneration(self):         
-        return(self.daysConsumption['net_power'])
+        return(self.daysConsumption['net_generation'])
 
     def teslaExtractDaysBattery(self):         
         return(self.daysConsumption['battery_power'])
@@ -549,7 +551,7 @@ class TeslaPWApi():
         return(self.daysConsumption['yesterday_consumed_power'])
 
     def teslaExtractYesterdayGeneraton(self):         
-        return(self.daysConsumption['yesterday_net_power'])
+        return(self.daysConsumption['net_generation'])
 
     def teslaExtractYesterdayBattery(self):         
         return(self.daysConsumption['yesterday_battery_power'])

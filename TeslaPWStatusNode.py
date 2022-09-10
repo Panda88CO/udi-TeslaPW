@@ -63,6 +63,8 @@ class teslaPWStatusNode(udi_interface.Node):
                 self.setDriver('GV16', self.TPW.getTPW_yesterdayGeneration())
                 self.setDriver('GV17', self.TPW.getTPW_daysGridServicesUse())
                 self.setDriver('GV18', self.TPW.getTPW_yesterdayGridServicesUse())
+                self.setDriver('GV17', self.TPW.getTPW_daysSolar())
+                self.setDriver('GV20', self.TPW.getTPW_yesterdaySolar())                
         else:
             logging.debug('System not ready yet')
 
@@ -98,6 +100,9 @@ class teslaPWStatusNode(udi_interface.Node):
             {'driver': 'GV16', 'value': 0, 'uom': 33}, #generation yesterday
             {'driver': 'GV17', 'value': 0, 'uom': 33}, #grid service today
             {'driver': 'GV18', 'value': 0, 'uom': 33}, #grid service yesterday
+            {'driver': 'GV19', 'value': 0, 'uom': 33}, #Solar today
+            {'driver': 'GV20', 'value': 0, 'uom': 33}, #Solar yesterday
+           
             ]
 
 

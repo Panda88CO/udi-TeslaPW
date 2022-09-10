@@ -5,6 +5,7 @@
          <st id="ST" editor="CTRL_1" />
          <st id="GV2" editor="CTRL_2" />
          <st id="GV3" editor="CTRL_3" />
+         <st id="GV4" editor="CTRL_4" />         
       </sts>
       <cmds>
          <sends>
@@ -38,6 +39,9 @@
          <st id="GV16" editor="KWH" />
          <st id="GV17" editor="KWH" />
          <st id="GV18" editor="KWH" />
+         <st id="GV19" editor="KWH" />
+         <st id="GV20" editor="KWH" />
+
       </sts>
       <cmds>
          <sends>

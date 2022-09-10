@@ -6,6 +6,11 @@ ST-nlscontroller-GV2-NAME = Connected to Tesla Power Wall
 CTRL_2-0 = False
 CTRL_2-1 = True
 ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
+ST-nlscontroller-GV4-NAME = Connection Status
+CON_STATE-0 = No Connection
+CON_STATE-1 = Local
+CON_STATE-2 = Cloud
+CON_STATE-3 = Local and Cloud
 
 ND-pwstatus-NAME = Power Wall Status
 ND-pwstatus-ICON = Electricity
@@ -40,6 +45,9 @@ ST-nlspwstatus-GV15-NAME = Generated Power Today
 ST-nlspwstatus-GV16-NAME = Generated Power Yesterday
 ST-nlspwstatus-GV17-NAME = Grid Service Power Today
 ST-nlspwstatus-GV18-NAME = Grid Service Power Yesterday
+ST-nlspwstatus-GV19-NAME = Solar Power Today
+ST-nlspwstatus-GV20-NAME = Solar Power Yesterday
+
 
 ND-pwsolar-NAME = Power Wall Solar Status
 ND-pwsolar-ICON = Electricity

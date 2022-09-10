@@ -7,6 +7,8 @@
 </editor>
   <editor id = "CTRL_3" > 
      <range  uom="107" min="0" max="255" prec="0" />
+  <editor id = "CTRL_2" > 
+     <range  uom="25" subset="0-3" nls="CON_STATE" />     
 </editor>
   <editor id = "PERCENT" > 
      <range  uom="51" min="0" max="100" prec="2" />
