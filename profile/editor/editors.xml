@@ -6,8 +6,9 @@
      <range  uom="25" subset="0-1" nls="CTRL_2" />
 </editor>
   <editor id = "CTRL_3" > 
-     <range  uom="107" min="0" max="255" prec="0" />
-  <editor id = "CTRL_2" > 
+     <range  uom="55" min="0" max="255" prec="0" />
+
+  <editor id = "CTRL_4" > 
      <range  uom="25" subset="0-3" nls="CON_STATE" />     
 </editor>
   <editor id = "PERCENT" > 
@@ -32,7 +33,7 @@
      <range  uom="33" min="0" max="20" prec="2" />
 </editor>
   <editor id = "KWH" > 
-     <range  uom="33" min="-100" max="100" prec="2" />
+     <range  uom="33" min="-100" max="100" prec="1" />
 </editor>
   <editor id = "KWH_20" > 
      <range  uom="33" min="-20" max="20" prec="2" />

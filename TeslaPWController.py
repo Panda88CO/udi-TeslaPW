@@ -451,7 +451,7 @@ class TeslaPWController(udi_interface.Node):
     drivers = [
             {'driver': 'ST', 'value':0, 'uom':2},
             {'driver': 'GV2', 'value':0, 'uom':25},
-            {'driver': 'GV3', 'value':0, 'uom':71},
+            {'driver': 'GV3', 'value':0, 'uom':55},
             {'driver': 'GV4', 'value':0, 'uom':25},
             ]
 
