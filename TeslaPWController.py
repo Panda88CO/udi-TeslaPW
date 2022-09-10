@@ -449,7 +449,7 @@ class TeslaPWController(udi_interface.Node):
     id = 'controller'
     commands = { 'UPDATE': ISYupdate }
     drivers = [
-            {'driver': 'ST', 'value':0, 'uom':2},
+            {'driver': 'ST', 'value':0, 'uom':25},
             {'driver': 'GV2', 'value':0, 'uom':25},
             {'driver': 'GV3', 'value':0, 'uom':55},
             {'driver': 'GV4', 'value':0, 'uom':25},

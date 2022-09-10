@@ -2,7 +2,7 @@
    <nodeDef id="controller" nls="nlscontroller">
       <editors />
       <sts>
-         <st id="ST" editor="CTRL_1" />
+         <st id="ST"  editor="CTRL_1" />
          <st id="GV2" editor="CTRL_2" />
          <st id="GV3" editor="CTRL_3" />
          <st id="GV4" editor="CTRL_4" />         

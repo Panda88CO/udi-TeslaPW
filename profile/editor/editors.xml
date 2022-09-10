@@ -1,9 +1,9 @@
 <editors> 
   <editor id = "CTRL_1" > 
-     <range  uom="2" min="0" max="1" />
+     <range  uom="25" subset="0-1" nls="UPDN" />
 </editor>
   <editor id = "CTRL_2" > 
-     <range  uom="25" subset="0-1" nls="CTRL_2" />
+     <range  uom="25" subset="0-1" nls="CON" />
 </editor>
   <editor id = "CTRL_3" > 
      <range  uom="55" min="0" max="255" prec="0" />

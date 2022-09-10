@@ -2,10 +2,13 @@ ND-controller-NAME = Tesla PowerWall Info
 ND-controller-ICON = Electricity
 CMD-nlscontroller-UPDATE-NAME = Update System Data
 ST-nlscontroller-ST-NAME = Controller Up
+UPDN-0 = Donw
+UPDN-1 = Up
 ST-nlscontroller-GV2-NAME = Connected to Tesla Power Wall
-CTRL_2-0 = False
-CTRL_2-1 = True
+CON-0 = Not Connected
+CON-1 = connected
 ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
+
 ST-nlscontroller-GV4-NAME = Connection Status
 CON_STATE-0 = No Connection
 CON_STATE-1 = Local
