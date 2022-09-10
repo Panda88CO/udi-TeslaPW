@@ -17,17 +17,11 @@ ND-pwstatus-ICON = Electricity
 CMD-nlspwstatus-UPDATE-NAME = Update System Data
 ST-nlspwstatus-GV1-NAME = Battery Charge Level
 ST-nlspwstatus-GV2-NAME = Operation Mode
-PWSTATUS2-0 = backup
-PWSTATUS2-1 = self_consumption
-PWSTATUS2-2 = autonomous
-PWSTATUS2-3 = site_ctrl
+
 ST-nlspwstatus-GV3-NAME = Grid Status
-PWSTATUS3-0 = on_grid
-PWSTATUS3-1 = islanded_ready
-PWSTATUS3-2 = islanded
-PWSTATUS3-3 = transition ot grid
+
 ST-nlspwstatus-GV4-NAME = Connected to Tesla
-PWSTATUS4-0 = False
+ON_LIBE-0 = False
 PWSTATUS4-1 = True
 ST-nlspwstatus-GV5-NAME = Grid Services Active
 PWSTATUS5-0 = False
