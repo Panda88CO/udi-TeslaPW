@@ -8,7 +8,6 @@ ST-nlscontroller-GV2-NAME = Connected to Tesla Power Wall
 CON-0 = Not Connected
 CON-1 = connected
 ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
-
 ST-nlscontroller-GV4-NAME = Connection Status
 CON_STATE-0 = No Connection
 CON_STATE-1 = Local

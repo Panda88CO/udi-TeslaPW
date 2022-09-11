@@ -7,7 +7,7 @@
 </editor>
   <editor id = "CTRL_3" > 
      <range  uom="55" min="0" max="255" prec="0" />
-
+</editor>
   <editor id = "CTRL_4" > 
      <range  uom="25" subset="0-3" nls="CON_STATE" />     
 </editor>
