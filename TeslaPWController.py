@@ -43,9 +43,6 @@ class TeslaPWController(udi_interface.Node):
         #self.poly.subscribe(self.poly.CONFIGDONE, self.check_config)
 
         self.n_queue = []
-
-
-       
         logging.debug('self.address : ' + str(self.address))
         logging.debug('self.name :' + str(self.name))
         self.hb = 0
@@ -102,8 +99,6 @@ class TeslaPWController(udi_interface.Node):
             self.Parameters['LOCAL_IP_ADDRESS'] = ''
         if self.Rtoken == '':
             self.Parameters['REFRESH_TOKEN'] = ''                        
-
-
 
     '''
     This may be called multiple times with different settings as the user
@@ -459,7 +454,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.11')
+        polyglot.start('0.1.12')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')

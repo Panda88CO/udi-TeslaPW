@@ -1,44 +1,58 @@
 <editors> 
   <editor id = "CTRL_1" > 
      <range  uom="25" subset="0-1" nls="UPDN" />
-</editor>
+  </editor>
+
   <editor id = "CTRL_2" > 
      <range  uom="25" subset="0-1" nls="CON" />
-</editor>
+  </editor>
+
   <editor id = "CTRL_3" > 
      <range  uom="55" min="0" max="255" prec="0" />
-</editor>
+  </editor>     
+
   <editor id = "CTRL_4" > 
      <range  uom="25" subset="0-3" nls="CON_STATE" />     
-</editor>
+  </editor>
+
   <editor id = "PERCENT" > 
      <range  uom="51" min="0" max="100" prec="2" />
-</editor>
+  </editor>
+
   <editor id = "OP_MODE" > 
      <range  uom="25" subset="0-3" nls="EN_MODE" />
-</editor>
+  </editor>
+
   <editor id = "GRID_ST" > 
      <range  uom="25" subset="0-3" nls="EN_GRID_STATUS" />
-</editor>
+  </editor>
+
   <editor id = "TOU_MODE" > 
      <range  uom="25" subset="0-1" nls="EN_TOU_MODE" />
-</editor>
+  </editor>
+
   <editor id = "ON_LINE" > 
      <range  uom="25" subset="0-1" nls="EN_ONLINE" />
-</editor>
+  </editor>
+
   <editor id = "TOGGLE" > 
      <range  uom="25" subset="0-1" nls="EN_TOGGLE" />
-</editor>
+  </editor>
+
   <editor id = "KWH_LOW" > 
      <range  uom="33" min="0" max="20" prec="2" />
-</editor>
+  </editor>
+
   <editor id = "KWH" > 
      <range  uom="33" min="-100" max="100" prec="1" />
-</editor>
+  </editor>
+
   <editor id = "KWH_20" > 
      <range  uom="33" min="-20" max="20" prec="2" />
-</editor>
+  </editor>
+
   <editor id = "TIME" > 
      <range  uom="58" min="0" max="86400" prec="0" />
-</editor>
+  </editor>
+
 </editors> 
