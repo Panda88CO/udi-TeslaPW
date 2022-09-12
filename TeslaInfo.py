@@ -53,9 +53,16 @@ class tesla_info:
 
         self.TPWlocal = Powerwall(IPaddress)
         self.TPWlocal.login(self.localPassword, self.localEmail)
-        if not(self.TPWlocal.is_authenticated()):            
-            logging.debug('Error Logging into Tesla Power Wall') 
+        loginAttempts = 0
+        while not(self.TPWlocal.is_authenticated()) and loginAttempts < 10:            
+            logging.info('Trying to togging into Tesla Power Wall') 
+            time.sleep(30)
+            self.TPWlocal.login(self.localPassword, self.localEmail)
+            loginAttempts = loginAttempts + 1
             self.localAccessUp = False 
+            if loginAttempts == 10: 
+                logging.error('Local Loging failed after 10 attempts - check credentials.')
+                logging.error('Powerwall may need to be turned on and off during this.  ')
         else:
             self.localAccessUp = True
             generator  = self.TPWlocal._api.get('generators')
