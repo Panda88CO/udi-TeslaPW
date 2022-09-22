@@ -54,7 +54,6 @@ class tesla_info:
         self.TPWlocal = Powerwall(IPaddress)
         self.TPWlocal.login(self.localPassword, self.localEmail)
         loginAttempts = 0
-        
         while not(self.TPWlocal.is_authenticated()) and loginAttempts < 10:            
             logging.info('Trying to togging into Tesla Power Wall') 
             time.sleep(30)
@@ -73,10 +72,10 @@ class tesla_info:
                 self.generatorInstalled = True
             solarInfo = self.TPWlocal.get_solars()
             solar = len(solarInfo) != 0
-            logging.debug('Test if solar installed ' + str(solar))
+            logging.debug('Test Solar instlled ' + str(solar))
             if solar:
                 self.solarInstalled = True
-                logging.debug('Solar installed ' + str(solar))
+                logging.debug('Solar instlled ' + str(solar))
             else:
                 self.solarInstalled = False
             self.metersDayStart = self.TPWlocal.get_meters()
@@ -226,34 +225,16 @@ class tesla_info:
                 self.yesterdayTotalGrid = self.daysTotalGrid
                 self.yesterdayTotalGridServices = self.daysTotalGridServices
                 self.yesterdayTotalGenerator = self.daysTotalGenerator
- 
                 if self.TPWlocalAccess:
-                    if not self.TPWlocal.is_authenticated():
-                        logging.error('Local Access no longer conntected ') 
-                        self.TPWlocal.login(self.localPassword, self.localEmail)
-                        loginAttempts = 0
-                        self.localAccessUp = self.TPWlocal.is_authenticated() 
-                        while not self.localAccessUp and loginAttempts < 10:            
-                            logging.info('Trying to togging into Tesla Power Wall') 
-                            time.sleep(30)
-                            self.TPWlocal.login(self.localPassword, self.localEmail)
-                            loginAttempts = loginAttempts + 1
-                            self.localAccessUp = self.TPWlocal.is_authenticated() 
-                            if loginAttempts == 10: 
-                                logging.error('Local Loging failed after 10 attempts - check credentials.')
-                                logging.error('Powerwall may need to be turned on and off during this.  ')
-                                self.lastDay = self.nowDay
-
-                if self.TPWlocalAccess:
-                    if self.TPWlocal.is_authenticated():
-                        self.metersDayStart = self.TPWlocal.get_meters()
-                        if self.solarInstalled:
-                            self.DSsolarMeter = self.metersDayStart.get_meter(MeterType.SOLAR)
-                        self.DSbatteryMeter = self.metersDayStart.get_meter(MeterType.BATTERY)
-                        self.DSloadMeter = self.metersDayStart.get_meter(MeterType.LOAD)
-                        self.DSsiteMeter = self.metersDayStart.get_meter(MeterType.SITE)
-                        if self.generatorInstalled:
-                            self.DSgeneratorMeter = self.metersDayStart.get_meter(MeterType.GENERATOR)
+                    self.metersDayStart = self.TPWlocal.get_meters()
+                    if self.solarInstalled:
+                        self.DSsolarMeter = self.metersDayStart.get_meter(MeterType.SOLAR)
+                    self.DSbatteryMeter = self.metersDayStart.get_meter(MeterType.BATTERY)
+                    self.DSloadMeter = self.metersDayStart.get_meter(MeterType.LOAD)
+                    self.DSsiteMeter = self.metersDayStart.get_meter(MeterType.SITE)
+                    if self.generatorInstalled:
+                        self.DSgeneratorMeter = self.metersDayStart.get_meter(MeterType.GENERATOR)
+                self.lastDay = self.nowDay
 
             
             # Get data from the cloud....
@@ -278,46 +259,39 @@ class tesla_info:
 
             # Get data directly from PW....
             if self.TPWlocalAccess:
+                logging.debug('pollSystemData - local - local connection = {}'.format(self.localAccessUp))
                 if not self.TPWlocal.is_authenticated():
-                    logging.error('Local Access no longer conntected ') 
-                    self.TPWlocal.login(self.localPassword, self.localEmail)
-                    loginAttempts = 0
-                    self.localAccessUp = self.TPWlocal.is_authenticated() 
-                    while not self.localAccessUp and loginAttempts < 10:            
-                        logging.info('Trying to togging into Tesla Power Wall') 
-                        time.sleep(30)
-                        self.TPWlocal.login(self.localPassword, self.localEmail)
-                        loginAttempts = loginAttempts + 1
-                        self.localAccessUp = self.TPWlocal.is_authenticated() 
-                        if loginAttempts == 10: 
-                            logging.error('Local Loging failed after 10 attempts - check credentials.')
-                            logging.error('Powerwall may need to be turned on and off during this.  ')
-                            self.lastDay = self.nowDay
-                
-                if self.localAccessUp:
-                    self.status = self.TPWlocal.get_sitemaster()
-                    self.meters = self.TPWlocal.get_meters()
-                    if self.solarInstalled:
-                        self.solarMeter = self.meters.get_meter(MeterType.SOLAR)
-                    self.batteryMeter = self.meters.get_meter(MeterType.BATTERY)
-                    self.loadMeter = self.meters.get_meter(MeterType.LOAD)
-                    self.siteMeter = self.meters.get_meter(MeterType.SITE)
-                    if self.generatorInstalled:
-                        self.generatorMeter = self.meters.get_meter(MeterType.GENERATOR)
-                    if level == 'all':
-                        # any of this that we got from the cloud calculations is
-                        # overwritten here because local data takes priority
-                        # Need to correlate to APP!!!!
-                        self.daysTotalSolar =  (self.solarMeter.energy_exported - self.DSsolarMeter.energy_exported)
-                        self.daysTotalConsumption = (self.loadMeter.energy_imported - self.DSloadMeter.energy_imported)
-                        self.daysTotalGeneraton = (self.siteMeter.energy_exported - self.DSsiteMeter.energy_exported )
-                        self.daysTotalBattery =  (float(self.batteryMeter.energy_exported - self.DSbatteryMeter.energy_exported - 
-                                                    (self.batteryMeter.energy_imported - self.DSbatteryMeter.energy_imported)))
-                        
-                        self.daysTotalGrid = -self.daysTotalConsumption - self.daysTotalGeneraton 
-                        if not self.TPWcloudAccess:
-                            self.daysTotalGridServices = 0.0 #Does not seem to exist
-                            self.daysTotalGenerator = 0.0 #needs to be updated - may not exist
+                    self.TPWlocal.logout()
+                    time.sleep(1)
+                    self.loginLocal(self.localEmail, self.localPassword, self.IPAddress)
+                    if not self.TPWlocal.is_authenticated():
+                        self.localAccessUp = False
+                        logging.error('No connection to Local Tesla Power Wall')
+                        return False
+
+                self.status = self.TPWlocal.get_sitemaster()
+                self.meters = self.TPWlocal.get_meters()
+                if self.solarInstalled:
+                    self.solarMeter = self.meters.get_meter(MeterType.SOLAR)
+                self.batteryMeter = self.meters.get_meter(MeterType.BATTERY)
+                self.loadMeter = self.meters.get_meter(MeterType.LOAD)
+                self.siteMeter = self.meters.get_meter(MeterType.SITE)
+                if self.generatorInstalled:
+                    self.generatorMeter = self.meters.get_meter(MeterType.GENERATOR)
+                if level == 'all':
+                    # any of this that we got from the cloud calculations is
+                    # overwritten here because local data takes priority
+                    # Need to correlate to APP!!!!
+                    self.daysTotalSolar =  (self.solarMeter.energy_exported - self.DSsolarMeter.energy_exported)
+                    self.daysTotalConsumption = (self.loadMeter.energy_imported - self.DSloadMeter.energy_imported)
+                    self.daysTotalGeneraton = (self.siteMeter.energy_exported - self.DSsiteMeter.energy_exported )
+                    self.daysTotalBattery =  (float(self.batteryMeter.energy_exported - self.DSbatteryMeter.energy_exported - 
+                                                (self.batteryMeter.energy_imported - self.DSbatteryMeter.energy_imported)))
+                    
+                    self.daysTotalGrid = -self.daysTotalConsumption - self.daysTotalGeneraton 
+                    if not self.TPWcloudAccess:
+                        self.daysTotalGridServices = 0.0 #Does not seem to exist
+                        self.daysTotalGenerator = 0.0 #needs to be updated - may not exist
 
             return True
 
