@@ -88,7 +88,7 @@ class TeslaPWController(udi_interface.Node):
             # Poll for current values (and update drivers)
             self.TPW.pollSystemData('all')          
             self.updateISYdrivers('all')
-            self.TPW.systemReady = True
+        self.TPW.systemReady = True
    
 
     def check_config(self):
