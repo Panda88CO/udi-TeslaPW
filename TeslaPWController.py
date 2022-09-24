@@ -83,6 +83,7 @@ class TeslaPWController(udi_interface.Node):
             self.tesla_initialize(self.local_email, self.local_password, self.local_ip, self.Rtoken)
         else:
             self.poly.Notices['cfg'] = 'Tesla PowerWall NS needs configuration REFRESH_TOKEN and/or LOCAL_EMAIL, LOCAL_PASSWORD, LOCAL_IP_ADDRESS'
+        
         while self.TPW == None:
             # Poll for current values (and update drivers)
             self.TPW.pollSystemData('all')          
@@ -366,7 +367,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.13')
+        polyglot.start('0.1.14')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
