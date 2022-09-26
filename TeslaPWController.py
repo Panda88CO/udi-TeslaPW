@@ -366,7 +366,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.13')
+        polyglot.start('0.1.14')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
