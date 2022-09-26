@@ -83,11 +83,12 @@ class TeslaPWController(udi_interface.Node):
             self.tesla_initialize(self.local_email, self.local_password, self.local_ip, self.Rtoken)
         else:
             self.poly.Notices['cfg'] = 'Tesla PowerWall NS needs configuration REFRESH_TOKEN and/or LOCAL_EMAIL, LOCAL_PASSWORD, LOCAL_IP_ADDRESS'
+        
         while self.TPW == None:
             # Poll for current values (and update drivers)
             self.TPW.pollSystemData('all')          
             self.updateISYdrivers('all')
-            self.TPW.systemReady = True
+        self.TPW.systemReady = True
    
 
     def check_config(self):
