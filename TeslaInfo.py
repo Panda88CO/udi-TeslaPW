@@ -10,6 +10,7 @@ except ImportError:
 
 from datetime import date
 import time
+import os
 from tesla_powerwall import Powerwall, GridStatus, OperationMode, MeterType
 from TeslaPWApi import TeslaPWApi
 
@@ -40,7 +41,7 @@ class tesla_info:
         self.TPWlocalAccess = local
         self.TPWcloudAccess = cloud
         self.systemReady = False 
-
+        self.firstPollCompleted = False
         if not local and not cloud:
             logging.debug('No connection specified')
 
@@ -56,7 +57,7 @@ class tesla_info:
         loginAttempts = 0
         
         while not(self.TPWlocal.is_authenticated()) and loginAttempts < 10:            
-            logging.info('Trying to togging into Tesla Power Wall') 
+            logging.info('Trying to log into Tesla Power Wall') 
             time.sleep(30)
             self.TPWlocal.login(self.localPassword, self.localEmail)
             loginAttempts = loginAttempts + 1
@@ -64,8 +65,10 @@ class tesla_info:
             if loginAttempts == 10: 
                 logging.error('Local Loging failed after 10 attempts - check credentials.')
                 logging.error('Powerwall may need to be turned on and off during this.  ')
+                os.exit()
         else:
             self.localAccessUp = True
+            
             generator  = self.TPWlocal._api.get('generators')
             if not(generator['generators']):
                 self.generatorInstalled = False
@@ -318,7 +321,7 @@ class tesla_info:
                         if not self.TPWcloudAccess:
                             self.daysTotalGridServices = 0.0 #Does not seem to exist
                             self.daysTotalGenerator = 0.0 #needs to be updated - may not exist
-
+            self.firstPollCompleted = True
             return True
 
         except Exception as e:
@@ -349,7 +352,7 @@ class tesla_info:
 
     def getTPW_chargeLevel(self):
  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             chargeLevel = self.TPWlocal.get_charge()
         else:
             chargeLevel = self.TPWcloud.teslaExtractChargeLevel()
@@ -359,7 +362,7 @@ class tesla_info:
 
 
     def getTPW_backoffLevel(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             backoffLevel=self.TPWlocal.get_backup_reserve_percentage()
         else:
             backoffLevel=self.TPWcloud.teslaExtractBackoffLevel()
@@ -377,7 +380,7 @@ class tesla_info:
         return(self.TPWcloud.teslaSetBackoffLevel(backupPercent))
 
     def getTPW_gridStatus(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             statusVal = self.TPWlocal.get_grid_status()
             if statusVal.value in self.gridStatusEnum:
                 key = self.gridStatusEnum[statusVal.value ]
@@ -390,7 +393,7 @@ class tesla_info:
 
     def getTPW_solarSupply(self):
         if self.solarInstalled:
-            if self.TPWlocalAccess:
+            if self.TPWlocalAccess and self.firstPollCompleted:
                 #logging.debug(self.meters)
                 solarPwr = self.solarMeter.instant_power
             else:
@@ -402,7 +405,7 @@ class tesla_info:
             return(0)
 
     def getTPW_batterySupply(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             batteryPwr = self.batteryMeter.instant_power
         else:
             batteryPwr = self.TPWcloud.teslaExtractBatterySupply()
@@ -413,7 +416,7 @@ class tesla_info:
 
         #site_live
     def getTPW_gridSupply(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             gridPwr = self.siteMeter.instant_power
         else:
             gridPwr = self.TPWcloud.teslaExtractGridSupply()
@@ -422,7 +425,7 @@ class tesla_info:
 
 
     def getTPW_load(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             loadPwr = self.loadMeter.instant_power
         else:
             loadPwr = self.TPWcloud.teslaExtractLoad()
@@ -431,7 +434,7 @@ class tesla_info:
 
 
     def getTPW_daysSolar(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalSolar
         else:
             Pwr = self.TPWcloud.teslaExtractDaysSolar()
@@ -440,7 +443,7 @@ class tesla_info:
 
 
     def getTPW_daysConsumption(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalConsumption
         else:
             Pwr = self.TPWcloud.teslaExtractDaysConsumption()
@@ -448,7 +451,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_daysGeneration(self):  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalGeneraton
         else:
             Pwr = self.TPWcloud.teslaExtractDaysGeneration()
@@ -456,7 +459,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_daysBattery(self):  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalBattery
         else:
             Pwr = self.TPWcloud.teslaExtractDaysBattery()
@@ -464,7 +467,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_daysGrid(self):  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalGrid
         else:
             Pwr = self.TPWcloud.teslaExtractDaysGrid()
@@ -472,7 +475,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_daysGridServicesUse(self):  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.daysTotalGridServices
         else:
             Pwr = self.TPWcloud.teslaExtractDaysGridServicesUse()
@@ -481,7 +484,7 @@ class tesla_info:
 
     def getTPW_daysGeneratorUse(self):  
         if self.generatorInstalled:
-            if self.TPWlocalAccess:
+            if self.TPWlocalAccess and self.firstPollCompleted:
                 Pwr = self.daysTotalGenerator
             else:
                 Pwr = self.TPWcloud.teslaExtractDaysGeneratorUse()
@@ -492,7 +495,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_yesterdaySolar(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalSolar
         else:
             Pwr = self.TPWcloud.teslaExtractYesteraySolar()
@@ -500,7 +503,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_yesterdayConsumption(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalConsumption
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayConsumption()
@@ -508,7 +511,7 @@ class tesla_info:
         return(round(Pwr/1000,2))
 
     def getTPW_yesterdayGeneration(self):  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalGeneration
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayGeneraton()
@@ -517,7 +520,7 @@ class tesla_info:
 
     def getTPW_yesterdayBattery(self):  
 
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalBattery
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayBattery()
@@ -526,7 +529,7 @@ class tesla_info:
 
     def getTPW_yesterdayGrid(self):  
 
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalGrid
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayGrid()
@@ -536,7 +539,7 @@ class tesla_info:
 
     def getTPW_yesterdayGridServicesUse(self):  
 
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalGridServices
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayGridServiceUse()
@@ -546,7 +549,7 @@ class tesla_info:
 
     def getTPW_yesterdayGeneratorUse(self):  
 
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             Pwr = self.yesterdayTotalGenerator
         else:
             Pwr = self.TPWcloud.teslaExtractYesterdayGeneratorUse()
@@ -556,7 +559,7 @@ class tesla_info:
 
 
     def getTPW_operationMode(self):
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             operationVal = self.TPWlocal.get_operation_mode()
             key = self.operationLocalEnum[operationVal.value]
         else:
@@ -605,7 +608,7 @@ class tesla_info:
 
     def getTPW_gridServiceActive(self):
         logging.debug('getTPW_gridServiceActive ')  
-        if self.TPWlocalAccess:
+        if self.TPWlocalAccess and self.firstPollCompleted:
             res = self.TPWlocal.is_grid_services_active()   
         else:
             res = self.TPWcloud.teslaExtractGridServiceActive()
