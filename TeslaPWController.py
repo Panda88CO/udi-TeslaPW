@@ -86,7 +86,7 @@ class TeslaPWController(udi_interface.Node):
         
         while self.TPW == None:
             # Poll for current values (and update drivers)
-            self.TPW.pollSystemData('all')          
+            self.TPW.pollSystemData('all')
             self.updateISYdrivers('all')
         self.TPW.systemReady = True
    
@@ -95,12 +95,22 @@ class TeslaPWController(udi_interface.Node):
         logging.debug('check_config')
         if self.local_email == '':
             self.Parameters['LOCAL_EMAIL'] = ''
+        else:
+            self.localAccess = True
         if self.local_password == '':
             self.Parameters['LOCAL_PASSWORD'] = ''
+        else:
+            self.localAccess = True
         if self.local_ip == '':
             self.Parameters['LOCAL_IP_ADDRESS'] = ''
+        else:
+            self.localAccess = True
+
         if self.Rtoken == '':
-            self.Parameters['REFRESH_TOKEN'] = ''                        
+            self.Parameters['REFRESH_TOKEN'] = ''
+        else:
+            self.cloudAccess = True
+         
 
     '''
     This may be called multiple times with different settings as the user
