@@ -167,7 +167,7 @@ class tesla_info:
         logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED_READY.value))
         logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.BACKUP.value))
         logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.SELF_CONSUMPTION.value))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANEDED.value))
+        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED.value))
 
         self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANDED_READY.value:'islanded_ready', GridStatus.ISLANDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition ot grid' }
         self.operationLocalEnum =  {OperationMode.BACKUP.value:'backup',OperationMode.SELF_CONSUMPTION.value:'self_consumption', OperationMode.AUTONOMOUS.value:'autonomous', OperationMode.SITE_CONTROL.value: 'site_ctrl' }
