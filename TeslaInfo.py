@@ -59,7 +59,7 @@ class tesla_info:
             time.sleep(30)
             self.TPWlocal.login(self.localPassword, self.localEmail)
             loginAttempts = loginAttempts + 1
-            self.localAccessUp = False 
+            self.localAccessUp = False
             if loginAttempts == 10: 
                 logging.error('Local Loging failed after 10 attempts - check credentials.')
                 logging.error('Powerwall may need to be turned on and off during this.  ')
@@ -233,8 +233,8 @@ class tesla_info:
                 self.yesterdayTotalSolar = self.daysTotalSolar
                 self.yesterdayTotalConsumption = self.daysTotalConsumption
                 self.yesterdayTotalGeneration  = self.daysTotalGeneraton
-                self.yesterdayTotalBattery =  self.daysTotalBattery 
-                self.yesterdayTotalGrid = self.daysTotalGrid
+                self.yesterdayTotalBattery =  self.daysTotalBattery
+                self.yesterdayTotalGrid = self.daysTotalGridServices
                 self.yesterdayTotalGridServices = self.daysTotalGridServices
                 self.yesterdayTotalGenerator = self.daysTotalGenerator
  

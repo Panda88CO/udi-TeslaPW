@@ -30,6 +30,8 @@ class TeslaPWController(udi_interface.Node):
         self.cloudAccess = False
         self.localAccess = False
         self.initialized = False
+        self.localAcccessUp = False
+        self.cloudAcccessUp = False
         self.Rtoken = None
         self.TPW = None
         self.Parameters = Custom(polyglot, 'customParams')
@@ -92,7 +94,7 @@ class TeslaPWController(udi_interface.Node):
    
 
     def check_config(self):
-        logging.debug('check_config')
+        logging.debug('check_config  {} {} {} {}'.format(self.local_email ,self.local_password,self.local_ip , self.Rtoken ))
         if self.local_email == '':
             self.Parameters['LOCAL_USER_EMAIL'] = ''
         else:
@@ -377,7 +379,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.21')
+        polyglot.start('0.1.22')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
