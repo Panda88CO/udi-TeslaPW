@@ -120,7 +120,7 @@ class TeslaPWController(udi_interface.Node):
     def tesla_initialize(self, local_email, local_password, local_ip, Rtoken):
         logging.debug('starting Login process')
         try:
-
+            logging.debug('localAccess:{}, cloudAccess:{}'.format(self.localAccess, self.cloudAccess))
             self.TPW = tesla_info(self.name, self.address, self.localAccess, self.cloudAccess)
             if self.localAccess:
                 logging.debug('Attempting to log in via local auth')
@@ -377,7 +377,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.20')
+        polyglot.start('0.1.21')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
