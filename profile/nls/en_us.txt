@@ -13,7 +13,7 @@ ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
 ST-nlscontroller-GV4-NAME = Connection Status
 CON_STATE-0 = No Connection
 CON_STATE-1 = Cloud
-CON_STATE-2 = Load
+CON_STATE-2 = Loacal
 CON_STATE-3 = Local and Cloud
 
 ND-pwstatus-NAME = Power Wall Status

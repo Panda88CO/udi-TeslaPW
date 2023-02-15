@@ -162,12 +162,12 @@ class tesla_info:
         self.ISYgridEnum = {}
         for key in self.gridstatus:
             self.ISYgridEnum[self.gridstatus [key]]= key
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( self.ISYgridEnum))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.CONNECTED.value))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED_READY.value))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.BACKUP.value))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.SELF_CONSUMPTION.value))
-        logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( self.ISYgridEnum))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.CONNECTED.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED_READY.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.BACKUP.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.SELF_CONSUMPTION.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED.value))
 
         self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANDED_READY.value:'islanded_ready', GridStatus.ISLANDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition ot grid' }
         self.operationLocalEnum =  {OperationMode.BACKUP.value:'backup',OperationMode.SELF_CONSUMPTION.value:'self_consumption', OperationMode.AUTONOMOUS.value:'autonomous', OperationMode.SITE_CONTROL.value: 'site_ctrl' }
@@ -350,12 +350,16 @@ class tesla_info:
     '''
     # Need to be imlemented 
     def isNodeServerUp(self):
-        self.localAccessUp = self.TPWlocal.is_authenticated()
+        
         logging.debug('isNodeServerUp - called' )
-        if self.localAccessUp == True or self.cloudAccessUp == True:
-             return(1)
+        if self.cloudAccessUp == True:
+            return(1)
+        elif self.localAccessUp == True:
+            self.localAccessUp = self.TPWlocal.is_authenticated()
+            if self.localAccessUp:
+                return(1)
         else:
-             return(0) 
+            return(0)
 
     def TPW_updateMeter(self):
         self.pollSystemData('all')
