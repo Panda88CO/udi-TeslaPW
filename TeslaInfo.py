@@ -155,7 +155,7 @@ class tesla_info:
             self.yesterdayTotalGridServices = self.TPWcloud.teslaExtractYesterdayGridServiceUse()
             self.yesterdayTotalGenerator = self.TPWcloud.teslaExtractYesterdayGeneratorUse()
 
-        logging.debug('teslaInitializeData - 1')
+        logging.debug('teslaInitializeData - 1 - grid status {} '.format(GridStatus))
         #self.OPERATING_MODES = ["backup", "self_consumption", "autonomous"]
         #self.TOU_MODES = ["economics", "balanced"]
         self.metersStart = True
@@ -169,10 +169,11 @@ class tesla_info:
         self.operationLocalEnum =  {OperationMode.BACKUP.value:'backup',OperationMode.SELF_CONSUMPTION.value:'self_consumption', OperationMode.AUTONOMOUS.value:'autonomous', OperationMode.SITE_CONTROL.value: 'site_ctrl' }
         self.operationModeEnum = {0:'backup', 1:'self_consumption', 2:'autonomous', 3:'site_ctrl'}
         self.ISYoperationModeEnum = {}
+        logging.debug( ' self.ISYoperationModeEnum, operationModeEnum: {} {}'.format(self.ISYoperationModeEnum, self.operationModeEnum))
         for key in self.operationModeEnum:
             self.ISYoperationModeEnum[self.operationModeEnum[key]] = key
 
-        self.operationCloudEnum = {}  
+        self.operationCloudEnum = {}
         logging.debug('teslaInitializeData - 2')
         if self.TPWcloudAccess:
             ModeList = self.TPWcloud.supportedOperatingModes()

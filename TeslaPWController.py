@@ -94,11 +94,11 @@ class TeslaPWController(udi_interface.Node):
     def check_config(self):
         logging.debug('check_config')
         if self.local_email == '':
-            self.Parameters['LOCAL_EMAIL'] = ''
+            self.Parameters['LOCAL_USER_EMAIL'] = ''
         else:
             self.localAccess = True
         if self.local_password == '':
-            self.Parameters['LOCAL_PASSWORD'] = ''
+            self.Parameters['LOCAL_USER_PASSWORD'] = ''
         else:
             self.localAccess = True
         if self.local_ip == '':
@@ -377,7 +377,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.15')
+        polyglot.start('0.1.16')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
