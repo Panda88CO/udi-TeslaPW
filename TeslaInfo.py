@@ -121,7 +121,7 @@ class tesla_info:
             self.TPWcloud.teslaCloudInfo()
             self.TPWcloud.teslaRetrieveCloudData()
             self.solarInstalled = self.TPWcloud.teslaGetSolar()
-            self.cloudAccessUp
+            self.cloudAccessUp = True
         return(self.cloudAccessUp)
 
 

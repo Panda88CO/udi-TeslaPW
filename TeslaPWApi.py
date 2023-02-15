@@ -216,8 +216,7 @@ class TeslaPWApi():
                 self.teslaApi.tesla_refresh_token( )
                 return(False)
 
-    def teslaExtractOperationMode(site_info):
-        return(site_info['default_real_mode'])
+
 
     def teslaGetSiteInfo(self, mode):
         #if self.connectionEstablished:
@@ -567,6 +566,8 @@ class TeslaPWApi():
 
     def teslaExtractOperationMode(self):         
         return(self.site_info['default_real_mode'])
+
+
     '''
     def teslaExtractConnectedTesla(self):       
         return(True)

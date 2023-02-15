@@ -233,7 +233,9 @@ class TeslaPWController(udi_interface.Node):
             local_valid = False
         else:
             self.local_email = self.Parameters.LOCAL_USER_EMAIL
-            self.poly.Notices.delete('lu')    
+            self.poly.Notices.delete('lu')
+            if self.local_email == '':
+                local_valid = False
 
         if self.Parameters.LOCAL_USER_PASSWORD == None:
             self.poly.Notices['lp'] =  'Missing Local User Password parameter (LOCAL_USER_PASSWORD)'
@@ -241,7 +243,9 @@ class TeslaPWController(udi_interface.Node):
             local_valid = False
         else:
             self.local_password = self.Parameters.LOCAL_USER_PASSWORD
-            self.poly.Notices.delete('lp')    
+            self.poly.Notices.delete('lp')
+            if self.local_password == '':
+                local_valid = False
 
         if self.Parameters.LOCAL_IP_ADDRESS == None:
             self.poly.Notices['ip'] = 'Missing Local IP Address parameter (LOCAL_IP_ADDRESS)'
@@ -249,7 +253,9 @@ class TeslaPWController(udi_interface.Node):
             local_valid = False
         else:
             self.local_ip = self.Parameters.LOCAL_IP_ADDRESS 
-            self.poly.Notices.delete('ip')    
+            self.poly.Notices.delete('ip')
+            if self.local_ip == '':
+                local_valid = False
 
         if self.Parameters.REFRESH_TOKEN == None:
             self.poly.Notices['ct'] = 'Missing Cloud Refresh Token (REFRESH_TOKEN)'
@@ -257,9 +263,10 @@ class TeslaPWController(udi_interface.Node):
             cloud_valid = False 
         else:
             self.Rtoken = self.Parameters.REFRESH_TOKEN 
-            self.poly.Notices.delete('ct')    
+            self.poly.Notices.delete('ct')   
+            if self.Rtoken == '':
+                cloud_valid = False 
  
-            
         if local_valid:
             logging.debug('Local access is valid, configure....')
             self.localAccess = True
@@ -379,7 +386,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.22')
+        polyglot.start('0.1.23')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
