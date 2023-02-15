@@ -44,14 +44,47 @@ class teslaPWSetupNode(udi_interface.Node):
             self.setDriver('GV3', self.TPW.getTPW_stormMode())
             self.setDriver('GV4', self.TPW.getTPW_touMode())
             if level == 'all':
-                self.setDriver('GV5', self.TPW.getTPW_getTouData('weekend', 'off_peak', 'start'))
-                self.setDriver('GV6', self.TPW.getTPW_getTouData('weekend', 'off_peak', 'stop'))
-                self.setDriver('GV7', self.TPW.getTPW_getTouData('weekend', 'peak', 'start'))
-                self.setDriver('GV8', self.TPW.getTPW_getTouData('weekend', 'peak', 'stop'))
-                self.setDriver('GV9', self.TPW.getTPW_getTouData('weekday', 'off_peak', 'start'))
-                self.setDriver('GV10', self.TPW.getTPW_getTouData('weekday', 'off_peak', 'stop'))
-                self.setDriver('GV11', self.TPW.getTPW_getTouData('weekday', 'peak', 'start'))
-                self.setDriver('GV12', self.TPW.getTPW_getTouData('weekday', 'peak', 'stop'))
+                val = self.TPW.getTPW_getTouData('weekend', 'off_peak', 'start')
+                if val != -1:
+                    self.setDriver('GV5', val, True, True, 58)
+                else:
+                    self.setDriver('GV5', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekend', 'off_peak', 'stop')
+                if val != -1:
+                    self.setDriver('GV6', val, True, True, 58)
+                else:
+                    self.setDriver('GV6', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekend', 'peak', 'start')
+                if val != -1:
+                    self.setDriver('GV7', val, True, True, 58)
+                else:
+                    self.setDriver('GV7', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekend', 'peak', 'stop')
+                if val != -1:
+                    self.setDriver('GV8', val, True, True, 58)
+                else:
+                    self.setDriver('GV8', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekday', 'off_peak', 'start')
+                if val != -1:
+                    self.setDriver('GV9', val, True, True, 58)
+                else:
+                    self.setDriver('GV9', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekday', 'off_peak', 'stop')
+                if val != -1:
+                    self.setDriver('GV10', val, True, True, 58)
+                else:
+                    self.setDriver('GV10', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekday', 'peak', 'start')
+                if val != -1:
+                    self.setDriver('GV11', val, True, True, 58)
+                else:
+                    self.setDriver('GV11', 99, True, True, 25)
+                val = self.TPW.getTPW_getTouData('weekday', 'peak', 'stop')
+                if val != -1:
+                    self.setDriver('GV12', val, True, True, 58)
+                else:
+                    self.setDriver('GV12', 99, True, True, 25)
+
             logging.debug('updateISYdrivers - setupnode DONE')
         else:
             logging.debug('System Not ready yet')

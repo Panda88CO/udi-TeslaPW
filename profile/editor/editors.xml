@@ -53,6 +53,7 @@
 
   <editor id = "TIME" > 
      <range  uom="58" min="0" max="86400" prec="0" />
+      <range uom="25" subset="99" nls="TOUTIME" />
   </editor>
 
 </editors> 

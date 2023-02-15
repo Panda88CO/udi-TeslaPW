@@ -89,6 +89,8 @@ ST-nlspwsetup-GV10-NAME = Weekday Off-peak End Time (sec)
 ST-nlspwsetup-GV11-NAME = Weekday Peak Start Time (sec)
 ST-nlspwsetup-GV12-NAME = Weekday Peak End Time (sec)
 
+TOUTIME-99 = Not Set
+
 EN_TOGGLE-0 = Disabled
 EN_TOGGLE-1 = Enabled
 
