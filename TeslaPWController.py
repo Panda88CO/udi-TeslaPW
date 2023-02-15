@@ -56,8 +56,14 @@ class TeslaPWController(udi_interface.Node):
         logging.debug('Controller init DONE')
         
         self.poly.ready()
-        self.poly.addNode(self)
+        self.poly.addNode(self, conn_status='ST')
         self.wait_for_node_done()
+
+        self.poly.updateProfile()
+        self.node = self.poly.getNode(self.address)
+
+
+
         self.setDriver('ST', 1, True, True)
         logging.debug('finish Init ')
 
@@ -367,11 +373,12 @@ class TeslaPWController(udi_interface.Node):
         logging.debug('ISY-update called')
         if self.TPW.pollSystemData('all'):
             self.updateISYdrivers('all')
+            nodes = self.poly.getNodes()
             #self.reportDrivers()
-            for node in self.nodes:
+            for node in nodes:
                 #logging.debug('Node : ' + node)
                 if node != self.address :
-                    self.nodes[node].longPoll()
+                    nodes[node].longPoll()
  
     id = 'controller'
     commands = { 'UPDATE': ISYupdate }
@@ -386,7 +393,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.26')
+        polyglot.start('0.1.28')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
