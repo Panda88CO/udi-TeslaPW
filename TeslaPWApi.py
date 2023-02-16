@@ -48,12 +48,14 @@ class TeslaPWApi():
         if self.teslaCloudInfo(): 
             self.connectionEstablished = True
             self.site_status = self.teslaGetSiteInfo('site_status')
+
             self.cloudAccess = self.teslaUpdateCloudData('all')
             self.touSchedule = self.teslaExtractTouScheduleList()
+            logging.debug('touSchedule: {}'.format(self.touSchedule))
         else:
             logging.error('Error getting cloud data')
             return(None)
-        #logging.debug(self.site_info)    
+        logging.debug('site info : {}'.format(self.site_info))
         if 'tou_settings' in self.site_info:
             if 'optimization_strategy' in self.site_info['tou_settings']:
                 self.touMode = self.site_info['tou_settings']['optimization_strategy']
@@ -323,8 +325,8 @@ class TeslaPWApi():
             else:
                 days = set([1,2,3,4,5])
 
-            if self.touScheduleList == None:
-                self.touScheduleList = self.teslaExtractTouScheduleList()
+            #if self.touScheduleList == None:
+            self.touScheduleList = self.teslaExtractTouScheduleList()
 
             for index in range(0,len(self.touScheduleList)):
                 if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
