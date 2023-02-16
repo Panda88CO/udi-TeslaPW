@@ -51,7 +51,7 @@ class TeslaPWApi():
 
             self.cloudAccess = self.teslaUpdateCloudData('all')
             #self.touSchedule = self.teslaExtractTouScheduleList()
-            logging.debug('touSchedule: {}'.format(self.touSchedule))
+            #logging.debug('touSchedule: {}'.format(self.touSchedule))
         else:
             logging.error('Error getting cloud data')
             return(None)
