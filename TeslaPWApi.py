@@ -50,7 +50,7 @@ class TeslaPWApi():
             self.site_status = self.teslaGetSiteInfo('site_status')
 
             self.cloudAccess = self.teslaUpdateCloudData('all')
-            self.touSchedule = self.teslaExtractTouScheduleList()
+            #self.touSchedule = self.teslaExtractTouScheduleList()
             logging.debug('touSchedule: {}'.format(self.touSchedule))
         else:
             logging.error('Error getting cloud data')
@@ -69,6 +69,7 @@ class TeslaPWApi():
             self.touMode = None
             self.touScheduleList = []
             logging.debug('Tou mode not set')
+        logging.debug('self.touScheduleList : {}'.format(self.touScheduleList ) )
 
     '''
     Query the cloud for the different types of data.  If all
@@ -358,6 +359,7 @@ class TeslaPWApi():
 
     def  teslaExtractTouTime(self, days, peakMode, startEnd ):
         indexFound = False
+        logging.debug('teslaExtractTouTime - self.touScheduleList {}'.format(self.touScheduleList ))
         try:
             if days == 'weekend':
                 days =set([6,0])
