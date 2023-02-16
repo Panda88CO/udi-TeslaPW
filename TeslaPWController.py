@@ -92,11 +92,7 @@ class TeslaPWController(udi_interface.Node):
         else:
             self.poly.Notices['cfg'] = 'Tesla PowerWall NS needs configuration REFRESH_TOKEN and/or LOCAL_EMAIL, LOCAL_PASSWORD, LOCAL_IP_ADDRESS'
         
-        while self.TPW == None:
-            # Poll for current values (and update drivers)
-            self.TPW.pollSystemData('all')
-            self.updateISYdrivers('all')
-        self.TPW.systemReady = True
+
    
 
     def check_config(self):
@@ -125,6 +121,8 @@ class TeslaPWController(udi_interface.Node):
     could be enabling or disabling the various types of access.  So if the
     user changes something, we want to re-initialize.
     '''
+
+
     def tesla_initialize(self, local_email, local_password, local_ip, Rtoken):
         logging.debug('starting Login process')
         try:
@@ -135,7 +133,7 @@ class TeslaPWController(udi_interface.Node):
                 try:
                     self.poly.Notices['localPW'] = 'Tesla PowerWall may need to be turned OFF and back ON to allow loacal access'
                     self.localAccessUp  = self.TPW.loginLocal(local_email, local_password, local_ip)
-                    logging.debug('local login - accessUP {}'.format(self.localAccessUp ))
+                    logging.debug('local loging - accessUP {}'.format(self.localAccessUp ))
                     if self.localAccessUp:
                         self.poly.Notices.delete('localPW')
                 except:
@@ -196,15 +194,16 @@ class TeslaPWController(udi_interface.Node):
             else:
                 self.poly.delNode('pwsetup')
 
-            self.updateISYdrivers('all')
             logging.debug('Node installation complete')
+            self.longPoll()
             self.nodeDefineDone = True
             self.initialized = True
-
+            
         except Exception as e:
             logging.error('Exception Controller start: '+ str(e))
             logging.info('Did not connect to power wall')
 
+        self.TPW.systemReady = True
         logging.debug ('Controller - initialization done')
 
     def handleLevelChange(self, level):
@@ -386,7 +385,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.32')
+        polyglot.start('0.1.33')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
