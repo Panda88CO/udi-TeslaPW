@@ -402,19 +402,21 @@ class TeslaPWApi():
                 days =set([6,0])
             else:
                 days = set([1,2,3,4,5])
+            
             for index in range(0,len(self.touScheduleList)):
-                if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
+                if self.touScheduleList[index]['target'] == peakMode and (set(self.touScheduleList[index]['week_days']) == days or set(self.touScheduleList[index]['week_days']) ==[1,0]):
                     if startEnd == 'start':
                         value = self.touScheduleList[index]['start_seconds']
                     else:
                         value = self.touScheduleList[index]['end_seconds']
                     indexFound = True
+                    logging.debug('Value {}'.format(value))
                     return(value)
             if not(indexFound):       
                 self.site_info = self.teslaGetSiteInfo('site_info')
                 self.touScheduleList = self.teslaExtractTouScheduleList()
                 for index in range(0,len(self.touScheduleList)):
-                    if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
+                    if self.touScheduleList[index]['target']== peakMode and (set(self.touScheduleList[index]['week_days']) == days or set(self.touScheduleList[index]['week_days']) ==[1,0]):
                         if startEnd == 'start':
                             value = self.touScheduleList[index]['start_seconds']
                         else:
