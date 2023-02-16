@@ -194,7 +194,8 @@ class TeslaPWController(udi_interface.Node):
                     self.wait_for_node_done()
             else:
                 self.poly.delNode('pwsetup')
-
+                
+            self.updateISYdrivers('all')
             logging.debug('Node installation complete')
             self.nodeDefineDone = True
             self.initialized = True
