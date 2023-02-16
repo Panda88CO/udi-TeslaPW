@@ -135,6 +135,7 @@ class TeslaPWController(udi_interface.Node):
                 try:
                     self.poly.Notices['localPW'] = 'Tesla PowerWall may need to be turned OFF and back ON to allow loacal access'
                     self.localAccessUp  = self.TPW.loginLocal(local_email, local_password, local_ip)
+                    logging.debug('local loging - accessUP {}'.format(self.localAccessUp ))
                     if self.localAccessUp:
                         self.poly.Notices.delete('localPW')
                 except:
@@ -194,7 +195,7 @@ class TeslaPWController(udi_interface.Node):
                     self.wait_for_node_done()
             else:
                 self.poly.delNode('pwsetup')
-                
+
             self.updateISYdrivers('all')
             logging.debug('Node installation complete')
             self.nodeDefineDone = True
@@ -385,7 +386,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.30')
+        polyglot.start('0.1.31')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
