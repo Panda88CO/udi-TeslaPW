@@ -322,10 +322,7 @@ class TeslaPWController(udi_interface.Node):
         else:
             logging.info('Problem polling data from Tesla system') 
 
-        
-
     def longPoll(self):
-
         logging.info('Tesla Power Wall  Controller longPoll')
 
         if self.TPW.pollSystemData('all'):
@@ -353,33 +350,27 @@ class TeslaPWController(udi_interface.Node):
             elif self.cloudAccess == True and self.localAccess == False:
                 self.setDriver('GV4', 1)
             elif self.cloudAccess == False and self.localAccess == True:
-                self.setDriver('GV4', 2)   
+                self.setDriver('GV4', 2)
             elif self.cloudAccess == True and self.localAccess == True:
-                self.setDriver('GV4', 3)   
+                self.setDriver('GV4', 3)
 
             logging.debug('CTRL Update ISY drivers : GV2  value:' + str(value) )
             logging.debug('CTRL Update ISY drivers : GV3  value:' + str(self.longPollCountMissed) )
 
         elif level == 'critical':
             value = self.TPW.isNodeServerUp()
-            self.setDriver('GV2', value)   
+            self.setDriver('GV2', value)
             logging.debug('CTRL Update ISY drivers : GV2  value:' + str(value) )
         else:
             logging.error('Wrong parameter passed: ' + str(level))
- 
+
 
 
     def ISYupdate (self, command):
         logging.debug('ISY-update called')
-        if self.TPW.pollSystemData('all'):
-            self.updateISYdrivers('all')
-            nodes = self.poly.getNodes()
-            #self.reportDrivers()
-            for node in nodes:
-                #logging.debug('Node : ' + node)
-                if node != self.address :
-                    nodes[node].longPoll()
- 
+        self.longPoll()
+
+
     id = 'controller'
     commands = { 'UPDATE': ISYupdate }
     drivers = [
@@ -393,7 +384,7 @@ if __name__ == "__main__":
     try:
         #logging.info('Starting Tesla Power Wall Controller')
         polyglot = udi_interface.Interface([])
-        polyglot.start('0.1.29')
+        polyglot.start('0.1.30')
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
         TeslaPWController(polyglot, 'controller', 'controller', 'TeslaPowerWall')
