@@ -70,15 +70,20 @@ class tesla_info:
                 break
         else:
             self.localAccessUp = True
-            generator  = self.TPWlocal._api.get('generators')
-            logging.debug('generator {}'.format(generator))
-            if 'generators' in generator:
-                if not(generator['generators']):
-                    self.generatorInstalled = False
+            try:
+                generator  = self.TPWlocal._api.get('generators')
+                logging.debug('generator {}'.format(generator))
+                if 'generators' in generator:
+                    if not(generator['generators']):
+                        self.generatorInstalled = False
+                    else:
+                        self.generatorInstalled = True
                 else:
-                    self.generatorInstalled = True
-            else:
+                    self.generatorInstalled = False
+            except Exception as e:
                 self.generatorInstalled = False
+                logging.error('Generator does not seem to be supported: {}'.format(e))
+                
             solarInfo = self.TPWlocal.get_solars()
             logging.debug('solarInfo {}'.format(solarInfo))
             solar = len(solarInfo) != 0
