@@ -56,4 +56,10 @@
       <range uom="25" subset="99" nls="TOUTIME" />
   </editor>
 
+  <editor id = "TIMESET" > 
+     <range  uom="58" min="0" max="86400" prec="0" />
+
+  </editor>
+
+
 </editors> 
