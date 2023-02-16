@@ -199,8 +199,8 @@ class teslaPWSetupNode(udi_interface.Node):
             {'driver': 'GV8', 'value': 0, 'uom': 58},  #weekend on end
             {'driver': 'GV9', 'value': 0, 'uom': 58},  #weekday off start
             {'driver': 'GV10', 'value': 0, 'uom': 58}, #weekday off end
-            {'driver': 'GV11', 'value': 0, 'uom': 58}, #weekday on start 
-            {'driver': 'GV12', 'value': 0, 'uom': 58}, #weekday on end 
+            {'driver': 'GV11', 'value': 0, 'uom': 58}, #weekday on start
+            {'driver': 'GV12', 'value': 0, 'uom': 58}, #weekday on end
             ]
 
         

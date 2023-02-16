@@ -718,6 +718,12 @@ class tesla_info:
         if self.TPWcloudAccess:        
             return(self.TPWcloud.teslaExtractTouTime(days, peakMode, startEnd ))
 
+    def getTPW_backup_time_remaining(self):
+        return(self.TPWcloud.teslaGet_backup_time_remaining())
+
+    def getTPW_tariff_rate(self):
+        return(self.TPWcloud.teslaGet_tariff_rate())
+
     def disconnectTPW(self):
         logging.debug('disconnectTPW ')  
         if self.localAccessUp:

@@ -219,7 +219,34 @@ class TeslaPWApi():
                 self.teslaApi.tesla_refresh_token( )
                 return(False)
 
+    def teslaGet_backup_time_remaining(self):
+        S = self.teslaApi.teslaConnect()
+        with requests.Session() as s:
+            try:
+                s.auth = OAuth2BearerToken(S['access_token'])   
+                r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/backup_time_remaining', headers=self.Header)          
+                self.backup_time_remaining = r.json()
+                return(self.backup_time_remaining )
+            except Exception as e:
+                logging.error('Exception teslaGetSiteInfo: ' + str(e))
+                logging.error('Trying to reconnect')
+                self.teslaApi.tesla_refresh_token( )
+                return(None)                
 
+
+    def teslaGet_tariff_rate(self):
+        S = self.teslaApi.teslaConnect()
+        with requests.Session() as s:
+            try:
+                s.auth = OAuth2BearerToken(S['access_token'])   
+                r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
+                self.tariff_rate = r.json()
+                return(self.tariff_rate)
+            except Exception as e:
+                logging.error('Exception teslaGetSiteInfo: ' + str(e))
+                logging.error('Trying to reconnect')
+                self.teslaApi.tesla_refresh_token( )
+                return(None)          
 
     def teslaGetSiteInfo(self, mode):
         #if self.connectionEstablished:
@@ -239,7 +266,17 @@ class TeslaPWApi():
                     site = r.json()            
                 elif mode == 'site_history_day':
                     r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/history', headers=self.Header, json={'kind':'power', 'period':'day'}) 
-                    site = r.json()                        
+                    site = r.json() 
+                elif mode == 'rate_tariffs':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/rate_tariffs', headers=self.Header)          
+                    site = r.json()
+                elif mode == 'tariff_rate':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
+                    site = r.json()
+                elif mode == 'backup_time_remaining':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/backup_time_remaining', headers=self.Header)          
+                    site = r.json()
+                                                                                                                                  
                 else:
                     #logging.debug('Unknown mode: '+mode)
                     return(None)
@@ -382,7 +419,7 @@ class TeslaPWApi():
                             value = self.touScheduleList[index]['start_seconds']
                         else:
                             value = self.touScheduleList[index]['end_seconds']
-                        indexFound = True_of_use_settings
+                        indexFound = True
                         return(value)
             if not(indexFound): 
                 logging.debug('No schedule appears to be set')            

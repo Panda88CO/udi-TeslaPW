@@ -15,6 +15,7 @@ Note - there is a discrepancy between local and cloud back-off limt.  Local powe
 ## Code
 Code uses API (local power wall) from https://github.com/jrester/tesla_powerwall API - not official Tesla API 
 Some info on the clould API can be found at https://www.teslaapi.io/powerwalls/commands
+as wellas at https://tesla-api.timdorr.com/ (this is an unofficial API)
 
 ## Refresh Token 
 An initial refresh token is required for first install (and perhaps if token somehow expires)

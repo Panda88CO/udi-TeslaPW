@@ -2,3 +2,4 @@
 TeslaTest.1py
 logs/debug.log
 TeslaTest.py
+*.pyc
