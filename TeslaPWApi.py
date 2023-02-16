@@ -95,7 +95,7 @@ class TeslaPWApi():
             if temp != None:
                 self.site_info = temp
                 access = True
-                
+            logging.debug('self.site_info {}'.format(self.site_info))    
             
             temp = self.teslaGetSiteInfo('site_history_day')            
             if temp != None:
@@ -110,11 +110,11 @@ class TeslaPWApi():
                 self.site_live = temp
                 access = True
                 
-            temp = self.teslaGetSiteInfo('site_info')
+            temp = self.teslaGetSiteInfo('site_info')            
             if temp != None:
                 self.site_info = temp
                 access = True
-            
+            logging.debug('self.site_info {}'.format(self.site_info))    
             temp = self.teslaGetSiteInfo('site_history_day')            
             if temp != None:
                 self.site_history = temp
@@ -382,7 +382,7 @@ class TeslaPWApi():
                             value = self.touScheduleList[index]['start_seconds']
                         else:
                             value = self.touScheduleList[index]['end_seconds']
-                        indexFound = True
+                        indexFound = True_of_use_settings
                         return(value)
             if not(indexFound): 
                 logging.debug('No schedule appears to be set')            
@@ -428,6 +428,7 @@ class TeslaPWApi():
         return(self.site_info['tou_settings']['optimization_strategy'])
 
     def teslaExtractTouScheduleList(self):
+        
         self.touScheduleList = self.site_info['tou_settings']['schedule']
         return( self.touScheduleList )
 
