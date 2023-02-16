@@ -51,12 +51,12 @@ class tesla_info:
         logging.debug('Local Access Supported')
 
         self.TPWlocal = Powerwall(IPaddress)
-        logging.debug('self.TPWlocal - {}'.format(self.TPWlocal))
+        #logging.debug('self.TPWlocal - {}'.format(self.TPWlocal))
         self.TPWlocal.login(self.localPassword, self.localEmail)
         logging.debug('self.TPWlocal ')
         loginAttempts = 0
         temp = self.TPWlocal.is_authenticated()
-        logging.debug('authendicated = {} '.format(temp))
+        #logging.debug('authendicated = {} '.format(temp))
         while not(self.TPWlocal.is_authenticated()) and loginAttempts < 10:            
             logging.info('Trying to log into Tesla Power Wall') 
             time.sleep(30)
@@ -67,15 +67,18 @@ class tesla_info:
                 logging.error('Local Loging failed after 10 attempts - check credentials.')
                 logging.error('Powerwall may need to be turned on and off during this.  ')
                 os.exit()
+                break
         else:
             self.localAccessUp = True
-            
             generator  = self.TPWlocal._api.get('generators')
             logging.debug('generator {}'.format(generator))
-            if not(generator['generators']):
-                self.generatorInstalled = False
+            if 'generators' in generator:
+                if not(generator['generators']):
+                    self.generatorInstalled = False
+                else:
+                    self.generatorInstalled = True
             else:
-                self.generatorInstalled = True
+                self.generatorInstalled = False
             solarInfo = self.TPWlocal.get_solars()
             logging.debug('solarInfo {}'.format(solarInfo))
             solar = len(solarInfo) != 0
