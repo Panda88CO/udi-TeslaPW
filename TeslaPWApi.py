@@ -402,7 +402,21 @@ class TeslaPWApi():
                 days =set([6,0])
             else:
                 days = set([1,2,3,4,5])
-            
+            value = -1
+            for data in self.touScheduleList:
+                if data['week_days'][0] == 1 and data['week_days'][1] == 0: # all daya
+                    if startEnd == 'start':
+                        value = data['start_seconds']                        
+                    else:
+                        value = data['end_seconds']
+                elif set(days) == set(data['week_days']):
+                    if startEnd == 'start':
+                        value = data['start_seconds']
+                    else:
+                        value = data['end_seconds']
+            return(value)
+
+            '''
             for index in range(0,len(self.touScheduleList)):
                 if self.touScheduleList[index]['target'] == peakMode and (set(self.touScheduleList[index]['week_days']) == days or set(self.touScheduleList[index]['week_days']) ==[1,0]):
                     if startEnd == 'start':
@@ -426,6 +440,8 @@ class TeslaPWApi():
             if not(indexFound): 
                 logging.debug('No schedule appears to be set')            
                 return(-1)
+            '''
+
         except  Exception as e:
             logging.error('Exception teslaExtractTouTime ' + str(e))
             logging.error('No schedule idenfied')
