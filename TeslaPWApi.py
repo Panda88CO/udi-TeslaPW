@@ -225,8 +225,9 @@ class TeslaPWApi():
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])   
                 r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/backup_time_remaining', headers=self.Header)          
-                self.backup_time_remaining = r.json()
-                return(self.backup_time_remaining ['time_remaining_hours'] )
+                temp = r.json()
+                self.backup_time_remaining = temp['response']['time_remaining_hours'] 
+                return(self.backup_time_remaining )
             except Exception as e:
                 logging.error('Exception teslaGetSiteInfo: ' + str(e))
                 logging.error('Trying to reconnect')
