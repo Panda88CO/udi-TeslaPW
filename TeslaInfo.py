@@ -714,7 +714,7 @@ class tesla_info:
             return(self.TPWcloud.teslaSetTouSchedule( peakOffpeak, weekWeekend, startEnd, time_s))
 
     def getTPW_getTouData(self, days, peakMode, startEnd ):
-        logging.debug('getTPW_getTouData ')  
+        logging.debug('getTPW_getTouData ')
         if self.TPWcloudAccess:        
             return(self.TPWcloud.teslaExtractTouTime(days, peakMode, startEnd ))
 

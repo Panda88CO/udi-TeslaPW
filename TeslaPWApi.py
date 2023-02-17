@@ -404,9 +404,10 @@ class TeslaPWApi():
                 days = set([1,2,3,4,5])
             value = -1
             for data in self.touScheduleList:
+                logging.debug('Looping data {}'.format(data))
                 if data['week_days'][0] == 1 and data['week_days'][1] == 0: # all daya
                     if startEnd == 'start':
-                        value = data['start_seconds']                        
+                        value = data['start_seconds']                    
                     else:
                         value = data['end_seconds']
                 elif set(days) == set(data['week_days']):
