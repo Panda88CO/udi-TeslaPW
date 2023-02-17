@@ -19,6 +19,7 @@ CON_STATE-3 = Local and Cloud
 ND-pwstatus-NAME = Power Wall Status
 ND-pwstatus-ICON = Electricity
 CMD-nlspwstatus-UPDATE-NAME = Update System Data
+ST-nlspwstatus-GV0-NAME = Estimated backup Time
 ST-nlspwstatus-GV1-NAME = Battery Charge Level
 ST-nlspwstatus-GV2-NAME = Operation Mode
 

@@ -14,7 +14,10 @@
   <editor id = "CTRL_4" > 
      <range  uom="25" subset="0-3" nls="CON_STATE" />     
   </editor>
-
+  <editor id = "HOURS" > 
+     <range  uom="20" min="0" max="100" prec="2" />
+  </editor>
+  
   <editor id = "PERCENT" > 
      <range  uom="51" min="0" max="100" prec="2" />
   </editor>

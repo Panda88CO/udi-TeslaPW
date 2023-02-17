@@ -21,6 +21,7 @@
    <nodeDef id="pwstatus" nls="nlspwstatus">
       <editors />
       <sts>
+         <st id="GV1" editor="HOURS" />
          <st id="GV1" editor="PERCENT" />
          <st id="GV2" editor="OP_MODE" />
          <st id="GV3" editor="GRID_ST" />
