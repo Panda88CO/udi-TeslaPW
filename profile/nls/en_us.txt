@@ -13,12 +13,13 @@ ST-nlscontroller-GV3-NAME = Consecutive missed LongPolls
 ST-nlscontroller-GV4-NAME = Connection Status
 CON_STATE-0 = No Connection
 CON_STATE-1 = Cloud
-CON_STATE-2 = Load
+CON_STATE-2 = Local
 CON_STATE-3 = Local and Cloud
 
 ND-pwstatus-NAME = Power Wall Status
 ND-pwstatus-ICON = Electricity
 CMD-nlspwstatus-UPDATE-NAME = Update System Data
+ST-nlspwstatus-GV0-NAME = Estimated backup Time
 ST-nlspwstatus-GV1-NAME = Battery Charge Level
 ST-nlspwstatus-GV2-NAME = Operation Mode
 
@@ -88,6 +89,8 @@ ST-nlspwsetup-GV9-NAME = Weekday Off-peak Start Time (sec)
 ST-nlspwsetup-GV10-NAME = Weekday Off-peak End Time (sec)
 ST-nlspwsetup-GV11-NAME = Weekday Peak Start Time (sec)
 ST-nlspwsetup-GV12-NAME = Weekday Peak End Time (sec)
+
+TOUTIME-99 = Not Set
 
 EN_TOGGLE-0 = Disabled
 EN_TOGGLE-1 = Enabled

@@ -48,12 +48,14 @@ class TeslaPWApi():
         if self.teslaCloudInfo(): 
             self.connectionEstablished = True
             self.site_status = self.teslaGetSiteInfo('site_status')
+
             self.cloudAccess = self.teslaUpdateCloudData('all')
-            self.touSchedule = self.teslaExtractTouScheduleList()
+            #self.touSchedule = self.teslaExtractTouScheduleList()
+            #logging.debug('touSchedule: {}'.format(self.touSchedule))
         else:
             logging.error('Error getting cloud data')
             return(None)
-        #logging.debug(self.site_info)    
+        logging.debug('site info : {}'.format(self.site_info))
         if 'tou_settings' in self.site_info:
             if 'optimization_strategy' in self.site_info['tou_settings']:
                 self.touMode = self.site_info['tou_settings']['optimization_strategy']
@@ -67,6 +69,7 @@ class TeslaPWApi():
             self.touMode = None
             self.touScheduleList = []
             logging.debug('Tou mode not set')
+        logging.debug('self.touScheduleList : {}'.format(self.touScheduleList ) )
 
     '''
     Query the cloud for the different types of data.  If all
@@ -92,7 +95,7 @@ class TeslaPWApi():
             if temp != None:
                 self.site_info = temp
                 access = True
-                
+            logging.debug('self.site_info {}'.format(self.site_info))    
             
             temp = self.teslaGetSiteInfo('site_history_day')            
             if temp != None:
@@ -107,11 +110,11 @@ class TeslaPWApi():
                 self.site_live = temp
                 access = True
                 
-            temp = self.teslaGetSiteInfo('site_info')
+            temp = self.teslaGetSiteInfo('site_info')            
             if temp != None:
                 self.site_info = temp
                 access = True
-            
+            logging.debug('self.site_info {}'.format(self.site_info))    
             temp = self.teslaGetSiteInfo('site_history_day')            
             if temp != None:
                 self.site_history = temp
@@ -216,8 +219,35 @@ class TeslaPWApi():
                 self.teslaApi.tesla_refresh_token( )
                 return(False)
 
-    def teslaExtractOperationMode(site_info):
-        return(site_info['default_real_mode'])
+    def teslaGet_backup_time_remaining(self):
+        S = self.teslaApi.teslaConnect()
+        with requests.Session() as s:
+            try:
+                s.auth = OAuth2BearerToken(S['access_token'])   
+                r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/backup_time_remaining', headers=self.Header)          
+                temp = r.json()
+                self.backup_time_remaining = temp['response']['time_remaining_hours'] 
+                return(self.backup_time_remaining )
+            except Exception as e:
+                logging.error('Exception teslaGetSiteInfo: ' + str(e))
+                logging.error('Trying to reconnect')
+                self.teslaApi.tesla_refresh_token( )
+                return(None)                
+
+
+    def teslaGet_tariff_rate(self):
+        S = self.teslaApi.teslaConnect()
+        with requests.Session() as s:
+            try:
+                s.auth = OAuth2BearerToken(S['access_token'])   
+                r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
+                self.tariff_rate = r.json()
+                return(self.tariff_rate)
+            except Exception as e:
+                logging.error('Exception teslaGetSiteInfo: ' + str(e))
+                logging.error('Trying to reconnect')
+                self.teslaApi.tesla_refresh_token( )
+                return(None)          
 
     def teslaGetSiteInfo(self, mode):
         #if self.connectionEstablished:
@@ -237,7 +267,17 @@ class TeslaPWApi():
                     site = r.json()            
                 elif mode == 'site_history_day':
                     r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/history', headers=self.Header, json={'kind':'power', 'period':'day'}) 
-                    site = r.json()                        
+                    site = r.json() 
+                elif mode == 'rate_tariffs':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/rate_tariffs', headers=self.Header)          
+                    site = r.json()
+                elif mode == 'tariff_rate':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
+                    site = r.json()
+                elif mode == 'backup_time_remaining':
+                    r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/backup_time_remaining', headers=self.Header)          
+                    site = r.json()
+                                                                                                                                  
                 else:
                     #logging.debug('Unknown mode: '+mode)
                     return(None)
@@ -324,8 +364,8 @@ class TeslaPWApi():
             else:
                 days = set([1,2,3,4,5])
 
-            if self.touScheduleList == None:
-                self.touScheduleList = self.teslaExtractTouScheduleList()
+            #if self.touScheduleList == None:
+            self.touScheduleList = self.teslaExtractTouScheduleList()
 
             for index in range(0,len(self.touScheduleList)):
                 if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
@@ -357,24 +397,42 @@ class TeslaPWApi():
 
     def  teslaExtractTouTime(self, days, peakMode, startEnd ):
         indexFound = False
+        logging.debug('teslaExtractTouTime - self.touScheduleList {}'.format(self.touScheduleList ))
         try:
             if days == 'weekend':
                 days =set([6,0])
             else:
                 days = set([1,2,3,4,5])
+            value = -1
+            for data in self.touScheduleList:
+                logging.debug('Looping data {}'.format(data))
+                if data['week_days'][0] == 1 and data['week_days'][1] == 0: # all daya
+                    if startEnd == 'start':
+                        value = data['start_seconds']                    
+                    else:
+                        value = data['end_seconds']
+                elif set(days) == set(data['week_days']):
+                    if startEnd == 'start':
+                        value = data['start_seconds']
+                    else:
+                        value = data['end_seconds']
+            return(value)
+
+            '''
             for index in range(0,len(self.touScheduleList)):
-                if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
+                if self.touScheduleList[index]['target'] == peakMode and (set(self.touScheduleList[index]['week_days']) == days or set(self.touScheduleList[index]['week_days']) ==[1,0]):
                     if startEnd == 'start':
                         value = self.touScheduleList[index]['start_seconds']
                     else:
                         value = self.touScheduleList[index]['end_seconds']
                     indexFound = True
+                    logging.debug('Value {}'.format(value))
                     return(value)
             if not(indexFound):       
                 self.site_info = self.teslaGetSiteInfo('site_info')
                 self.touScheduleList = self.teslaExtractTouScheduleList()
                 for index in range(0,len(self.touScheduleList)):
-                    if self.touScheduleList[index]['target']== peakMode and set(self.touScheduleList[index]['week_days']) == days:
+                    if self.touScheduleList[index]['target']== peakMode and (set(self.touScheduleList[index]['week_days']) == days or set(self.touScheduleList[index]['week_days']) ==[1,0]):
                         if startEnd == 'start':
                             value = self.touScheduleList[index]['start_seconds']
                         else:
@@ -384,6 +442,8 @@ class TeslaPWApi():
             if not(indexFound): 
                 logging.debug('No schedule appears to be set')            
                 return(-1)
+            '''
+
         except  Exception as e:
             logging.error('Exception teslaExtractTouTime ' + str(e))
             logging.error('No schedule idenfied')
@@ -425,6 +485,7 @@ class TeslaPWApi():
         return(self.site_info['tou_settings']['optimization_strategy'])
 
     def teslaExtractTouScheduleList(self):
+        
         self.touScheduleList = self.site_info['tou_settings']['schedule']
         return( self.touScheduleList )
 
@@ -567,6 +628,8 @@ class TeslaPWApi():
 
     def teslaExtractOperationMode(self):         
         return(self.site_info['default_real_mode'])
+
+
     '''
     def teslaExtractConnectedTesla(self):       
         return(True)

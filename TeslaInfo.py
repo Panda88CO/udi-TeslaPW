@@ -35,8 +35,6 @@ class tesla_info:
         self.generatorInstalled  = True # I have not found a way to identify this on clould only connection so it will report even if not there
         self.solarInstalled = False
         self.ISYCritical = {}
-        self.localAccessUp = False
-        self.cloudAccessUp = False
         self.lastDay = date.today()  
         self.localAccessUp = local
         self.TPWcloudAccess = cloud
@@ -53,28 +51,41 @@ class tesla_info:
         logging.debug('Local Access Supported')
 
         self.TPWlocal = Powerwall(IPaddress)
+        #logging.debug('self.TPWlocal - {}'.format(self.TPWlocal))
         self.TPWlocal.login(self.localPassword, self.localEmail)
+        logging.debug('self.TPWlocal ')
         loginAttempts = 0
-        
+        temp = self.TPWlocal.is_authenticated()
+        #logging.debug('authendicated = {} '.format(temp))
         while not(self.TPWlocal.is_authenticated()) and loginAttempts < 10:            
             logging.info('Trying to log into Tesla Power Wall') 
             time.sleep(30)
             self.TPWlocal.login(self.localPassword, self.localEmail)
             loginAttempts = loginAttempts + 1
-            self.localAccessUp = False 
+            self.localAccessUp = False
             if loginAttempts == 10: 
                 logging.error('Local Loging failed after 10 attempts - check credentials.')
                 logging.error('Powerwall may need to be turned on and off during this.  ')
                 os.exit()
+                break
         else:
             self.localAccessUp = True
-            
-            generator  = self.TPWlocal._api.get('generators')
-            if not(generator['generators']):
+            try:
+                generator  = self.TPWlocal._api.get('generators')
+                logging.debug('generator {}'.format(generator))
+                if 'generators' in generator:
+                    if not(generator['generators']):
+                        self.generatorInstalled = False
+                    else:
+                        self.generatorInstalled = True
+                else:
+                    self.generatorInstalled = False
+            except Exception as e:
                 self.generatorInstalled = False
-            else:
-                self.generatorInstalled = True
+                logging.error('Generator does not seem to be supported: {}'.format(e))
+                
             solarInfo = self.TPWlocal.get_solars()
+            logging.debug('solarInfo {}'.format(solarInfo))
             solar = len(solarInfo) != 0
             logging.debug('Test if solar installed ' + str(solar))
             if solar:
@@ -123,7 +134,7 @@ class tesla_info:
             self.TPWcloud.teslaCloudInfo()
             self.TPWcloud.teslaRetrieveCloudData()
             self.solarInstalled = self.TPWcloud.teslaGetSolar()
-            self.cloudAccessUp
+            self.cloudAccessUp = True
         return(self.cloudAccessUp)
 
 
@@ -155,7 +166,7 @@ class tesla_info:
             self.yesterdayTotalGridServices = self.TPWcloud.teslaExtractYesterdayGridServiceUse()
             self.yesterdayTotalGenerator = self.TPWcloud.teslaExtractYesterdayGeneratorUse()
 
-           
+        logging.debug('teslaInitializeData - 1 - grid status {} '.format(GridStatus))
         #self.OPERATING_MODES = ["backup", "self_consumption", "autonomous"]
         #self.TOU_MODES = ["economics", "balanced"]
         self.metersStart = True
@@ -164,28 +175,38 @@ class tesla_info:
         self.ISYgridEnum = {}
         for key in self.gridstatus:
             self.ISYgridEnum[self.gridstatus [key]]= key
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( self.ISYgridEnum))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.CONNECTED.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED_READY.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.BACKUP.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.SELF_CONSUMPTION.value))
+        #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED.value))
 
-        self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANEDED_READY.value:'islanded_ready', GridStatus.ISLANEDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition ot grid' }
+        self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANDED_READY.value:'islanded_ready', GridStatus.ISLANDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition ot grid' }
         self.operationLocalEnum =  {OperationMode.BACKUP.value:'backup',OperationMode.SELF_CONSUMPTION.value:'self_consumption', OperationMode.AUTONOMOUS.value:'autonomous', OperationMode.SITE_CONTROL.value: 'site_ctrl' }
         self.operationModeEnum = {0:'backup', 1:'self_consumption', 2:'autonomous', 3:'site_ctrl'}
         self.ISYoperationModeEnum = {}
+        logging.debug( ' self.ISYoperationModeEnum, operationModeEnum: {} {}'.format(self.ISYoperationModeEnum, self.operationModeEnum))
         for key in self.operationModeEnum:
             self.ISYoperationModeEnum[self.operationModeEnum[key]] = key
 
-        self.operationCloudEnum = {}  
-
+        self.operationCloudEnum = {}
+        logging.debug('teslaInitializeData - 2')
         if self.TPWcloudAccess:
             ModeList = self.TPWcloud.supportedOperatingModes()
+
             for i in range(0,len(ModeList)):
                 self.operationCloudEnum[i]= ModeList[i] 
             ModeList = self.ISYoperationModeEnum
-
+            logging.debug( ' self.operationCloudEnum, modelist: {} {}'.format(self.operationCloudEnum, ModeList ))
             for  key in ModeList:
                 self.operationCloudEnum[ModeList[key]]= key
             
             ModeList = self.TPWcloud.supportedTouModes()
             self.touCloudEnum = {}
             self.ISYtouEnum = {}
+
+            logging.debug( ' self.touCloudEnum,ISYtouEnum, modelist: {} {} {}'.format(self.touCloudEnum ,self.ISYtouEnum,  ModeList ))
             for i in range(0,len(ModeList)):
                 self.touCloudEnum[i]= ModeList[i]
                 self.ISYtouEnum[ModeList[i]] = i
@@ -225,8 +246,8 @@ class tesla_info:
                 self.yesterdayTotalSolar = self.daysTotalSolar
                 self.yesterdayTotalConsumption = self.daysTotalConsumption
                 self.yesterdayTotalGeneration  = self.daysTotalGeneraton
-                self.yesterdayTotalBattery =  self.daysTotalBattery 
-                self.yesterdayTotalGrid = self.daysTotalGrid
+                self.yesterdayTotalBattery =  self.daysTotalBattery
+                self.yesterdayTotalGrid = self.daysTotalGridServices
                 self.yesterdayTotalGridServices = self.daysTotalGridServices
                 self.yesterdayTotalGenerator = self.daysTotalGenerator
  
@@ -342,12 +363,16 @@ class tesla_info:
     '''
     # Need to be imlemented 
     def isNodeServerUp(self):
-        self.localAccessUp = self.TPWlocal.is_authenticated()
+        
         logging.debug('isNodeServerUp - called' )
-        if self.localAccessUp == True or self.cloudAccessUp == True:
-             return(1)
+        if self.cloudAccessUp == True:
+            return(1)
+        elif self.localAccessUp == True:
+            self.localAccessUp = self.TPWlocal.is_authenticated()
+            if self.localAccessUp:
+                return(1)
         else:
-             return(0) 
+            return(0)
 
     def TPW_updateMeter(self):
         self.pollSystemData('all')
@@ -689,9 +714,15 @@ class tesla_info:
             return(self.TPWcloud.teslaSetTouSchedule( peakOffpeak, weekWeekend, startEnd, time_s))
 
     def getTPW_getTouData(self, days, peakMode, startEnd ):
-        logging.debug('getTPW_getTouData ')  
+        logging.debug('getTPW_getTouData ')
         if self.TPWcloudAccess:        
             return(self.TPWcloud.teslaExtractTouTime(days, peakMode, startEnd ))
+
+    def getTPW_backup_time_remaining(self):
+        return(self.TPWcloud.teslaGet_backup_time_remaining())
+
+    def getTPW_tariff_rate(self):
+        return(self.TPWcloud.teslaGet_tariff_rate())
 
     def disconnectTPW(self):
         logging.debug('disconnectTPW ')  

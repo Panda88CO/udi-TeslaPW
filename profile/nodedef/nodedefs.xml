@@ -21,6 +21,7 @@
    <nodeDef id="pwstatus" nls="nlspwstatus">
       <editors />
       <sts>
+         <st id="GV0" editor="HOURS" />
          <st id="GV1" editor="PERCENT" />
          <st id="GV2" editor="OP_MODE" />
          <st id="GV3" editor="GRID_ST" />
@@ -116,28 +117,28 @@
                <p id="" editor="TOU_MODE" init="GV4" /> 
             </cmd> 
             <cmd id="WE_O_PEAK_START" > 
-               <p id="" editor="TIME" init="GV5" /> 
+               <p id="" editor="TIMESET" init="GV5" /> 
             </cmd> 
             <cmd id="WE_O_PEAK_END" > 
-               <p id="" editor="TIME" init="GV6" /> 
+               <p id="" editor="TIMESET" init="GV6" /> 
             </cmd> 
             <cmd id="WE_PEAK_START" > 
-               <p id="" editor="TIME" init="GV7" /> 
+               <p id="" editor="TIMESET" init="GV7" /> 
             </cmd> 
             <cmd id="WE_PEAK_END" > 
-               <p id="" editor="TIME" init="GV8" /> 
+               <p id="" editor="TIMESET" init="GV8" /> 
             </cmd> 
             <cmd id="WK_O_PEAK_START" > 
-               <p id="" editor="TIME" init="GV9" /> 
+               <p id="" editor="TIMESET" init="GV9" /> 
             </cmd> 
             <cmd id="WK_O_PEAK_END" > 
-               <p id="" editor="TIME" init="GV10" /> 
+               <p id="" editor="TIMESET" init="GV10" /> 
             </cmd> 
             <cmd id="WK_PEAK_START" > 
-               <p id="" editor="TIME" init="GV11" /> 
+               <p id="" editor="TIMESET" init="GV11" /> 
             </cmd> 
             <cmd id="WK_PEAK_END" > 
-               <p id="" editor="TIME" init="GV12" /> 
+               <p id="" editor="TIMESET" init="GV12" /> 
             </cmd> 
             <cmd id="UPDATE" /> 
          </accepts>
