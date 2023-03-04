@@ -27,7 +27,7 @@
   </editor>
 
   <editor id = "GRID_ST" > 
-     <range  uom="25" subset="0-3" nls="EN_GRID_STATUS" />
+     <range  uom="25" subset="0-3,99" nls="EN_GRID_STATUS" />
   </editor>
 
   <editor id = "TOU_MODE" > 

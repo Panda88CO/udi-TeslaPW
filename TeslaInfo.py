@@ -182,7 +182,7 @@ class tesla_info:
         #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( OperationMode.SELF_CONSUMPTION.value))
         #logging.debug('teslaInitializeData - 1.1 -  self.ISYgridEnum{} '.format( GridStatus.ISLANDED.value))
 
-        self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANDED_READY.value:'islanded_ready', GridStatus.ISLANDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition ot grid' }
+        self.gridStatusEnum = {GridStatus.CONNECTED.value: 'on_grid', GridStatus.ISLANDED_READY.value:'islanded_ready', GridStatus.ISLANDED.value:'islanded', GridStatus.TRANSITION_TO_GRID.value:'transition to grid' }
         self.operationLocalEnum =  {OperationMode.BACKUP.value:'backup',OperationMode.SELF_CONSUMPTION.value:'self_consumption', OperationMode.AUTONOMOUS.value:'autonomous', OperationMode.SITE_CONTROL.value: 'site_ctrl' }
         self.operationModeEnum = {0:'backup', 1:'self_consumption', 2:'autonomous', 3:'site_ctrl'}
         self.ISYoperationModeEnum = {}
@@ -420,14 +420,21 @@ class tesla_info:
                 statusVal = self.TPWlocal.get_grid_status()
                 if statusVal.value in self.gridStatusEnum:
                     key = self.gridStatusEnum[statusVal.value ]
+
                     #logging.debug(key)
             except:
                 if self.firstPollCompleted:
                     self.localAccessUp = False
         else:
             key = self.TPWcloud.teslaExtractGridStatus()
-        logging.debug('grid status '+str(self.gridstatus[key]))
-        return(self.gridstatus[key])
+
+        if key in self.gridstatus:
+            logging.debug('Grid status: {}'.format(key))
+            return(self.gridstatus[key])
+        else:
+            logging.debug('Grid status UNKNOW code {}: return 99'.format(key))
+            return (99)
+
 
 
     def getTPW_solarSupply(self):
