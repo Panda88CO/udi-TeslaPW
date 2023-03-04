@@ -107,6 +107,7 @@ EN_GRID_STATUS-0 = on grid
 EN_GRID_STATUS-1 = islanded ready
 EN_GRID_STATUS-2 = islanded
 EN_GRID_STATUS-3 = transition to grid
+EN_GRID_STATUS-99 = unknown code 
 
 EN_ONLINE-0 = offline
 EN_ONLINE-1 = online
