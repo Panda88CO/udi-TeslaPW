@@ -36,6 +36,7 @@ class TeslaPWApi():
         self.products = {}
         self.site_id = ''
         self.Header= {'Accept':'application/json'}
+        #self.tarif_data = {}
         #self.battery_id = ''
         #self.teslaAuth = TPWauth(self.email, self.password)
 
@@ -241,13 +242,71 @@ class TeslaPWApi():
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])   
                 r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
-                self.tariff_rate = r.json()
-                return(self.tariff_rate)
+                tariff_data = r.json()
+                return(tariff_data['response'])
             except Exception as e:
                 logging.error('Exception teslaGetSiteInfo: ' + str(e))
                 logging.error('Trying to reconnect')
                 self.teslaApi.tesla_refresh_token( )
-                return(None)          
+                return(None)    
+
+
+    def TeslaGet_current_rate_state(self):
+        logging.debug('get_current_state')
+        try:
+            now = datetime.now()
+            tarif_data = self.teslaGet_tariff_rate()
+            print(now.month, now.day)
+            for season in tarif_data['seasons']:
+                print(tarif_data['seasons'][season]['fromMonth'] , tarif_data['seasons'][season]['fromDay'])
+                monthF = tarif_data['seasons'][season]['fromMonth']
+                montT = tarif_data['seasons'][season]['toMonth']
+                dayF = tarif_data['seasons'][season]['fromDay'] 
+                dayT = tarif_data['seasons'][season]['toDay'] 
+
+                
+
+
+                if tarif_data['seasons'][season]['fromMonth'] >= now.month  and tarif_data['seasons'][season]['toMonth'] <= now.month:
+                    if tarif_data['seasons'][season]['fromDay'] >= now.day and tarif_data['seasons'][season]['toDay'] <= now.day:
+                        seasonNow = season
+                        for period in tarif_data['seasons'][season]['tou_periods']:
+                            for timeRange in tarif_data['seasons'][season]['tou_periods'][period]:
+                                dayWF = timeRange['fromDayOfWeek']
+                                dayWT =timeRange['toDayOfWeek']
+                                hourF = timeRange['fromHour']
+                                hourT = timeRange['toHour']
+                                minF = timeRange['fromMinute']
+                                minT = timeRange['toMinute']
+                            #if now.weekday() >= tarif_data['seasons'][season]['fromDayOfWeek'] and now.weekday() <= tarif_data['seasons'][season]['toDayOfWeek']:
+                            #    if now.hour >= tarif_data['seasons'][season]['fromHour'] and now.hour <= tarif_data['seasons'][season]['toHour']:
+                            #        if now.minute >= tarif_data['seasons'][season]['fromMinute'] and now.minute <= tarif_data['seasons'][season]['toMinute']:
+                            #            periodNow = period
+                            #            break
+            if seasonNow in tarif_data['energy_charges']:
+                buyRateNow = tarif_data['energy_charges'][seasonNow][periodNow]
+            else:
+                buyRateNow = tarif_data['energy_charges']['ALL']
+            #if seasonNow in tarif_data['sell_tariff']:
+            #    buyRateNow = tarif_data['sell_tariff'][seasonNow][periodNow]
+            #else:
+            #    buyRateNow = tarif_data['sell_tariff']['ALL']
+
+            return seasonNow, periodNow, buyRateNow
+        except Exception as E:
+            logging.error('TeslaGet_current_state Exception: {}'.format(E))
+            return 99, 99, 0
+
+    def peak_info(self):
+        logging.debug('peak_info')
+
+    def get_current_buy_price(self):
+        logging.debug('get_current_buy_price')
+
+    def get_current_sell_price(self):
+        logging.debug('get_current_sell_price')
+
+
 
     def teslaGetSiteInfo(self, mode):
         #if self.connectionEstablished:
