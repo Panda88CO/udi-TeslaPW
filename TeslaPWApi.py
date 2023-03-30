@@ -256,41 +256,49 @@ class TeslaPWApi():
         try:
             now = datetime.now()
             tarif_data = self.teslaGet_tariff_rate()
-            print(now.month, now.day)
+            seasonFound = False
             for season in tarif_data['seasons']:
-                print(tarif_data['seasons'][season]['fromMonth'] , tarif_data['seasons'][season]['fromDay'])
+      
                 monthF = tarif_data['seasons'][season]['fromMonth']
-                montT = tarif_data['seasons'][season]['toMonth']
+                monthT = tarif_data['seasons'][season]['toMonth']
                 dayF = tarif_data['seasons'][season]['fromDay'] 
                 dayT = tarif_data['seasons'][season]['toDay'] 
+                if  (monthF <= monthT and (now.month  >= monthF and now.month <= monthT)) or ( monthF > monthT and (now.month  >= monthF or now.month <= monthT)): 
+                        if now.month == monthF:
+                            seasonFound =  now.day >= dayF
+                        elif now.month == monthT:
+                            seasonFound =   now.day <= dayT
+                        else:
+                            seasonFound =  True                                                                 
+                if seasonFound:
+                    seasonNow = season     
+                    break
+            periodFound = False
+            for period in tarif_data['seasons'][seasonNow]['tou_periods']:                
+                for timeRange in tarif_data['seasons'][seasonNow]['tou_periods'][period]:
+                    wdayF = timeRange['fromDayOfWeek']
+                    wdayT =timeRange['toDayOfWeek']
+                    hourF = timeRange['fromHour']
+                    hourT = timeRange['toHour']
+                    minF = timeRange['fromMinute']
+                    minT = timeRange['toMinute']    
+             
+                    if wdayF <= wdayT and ( wdayF <= now.weekday() and wdayT >= now.weekday()) or (wdayT <= wdayF and ( wdayF >= now.weekday() or wdayT <= now.weekday())):
+                        if (hourF <= hourT and (now.hour >= hourF and now.hour <= hourT)) or (hourF > hourT and (now.hour >= hourF or now.hour <= hourT)):
+                            if now.hour == hourF:
+                                periodFound = now.min > minF
+                            elif now.hour == hourT:
+                                periodFound = now.min < minT
+                            else:
+                                periodFound = True
+                    if periodFound:
+                        periodNow = period
+                        break
 
-                
-
-
-                if tarif_data['seasons'][season]['fromMonth'] >= now.month  and tarif_data['seasons'][season]['toMonth'] <= now.month:
-                    if tarif_data['seasons'][season]['fromDay'] >= now.day and tarif_data['seasons'][season]['toDay'] <= now.day:
-                        seasonNow = season
-                        for period in tarif_data['seasons'][season]['tou_periods']:
-                            for timeRange in tarif_data['seasons'][season]['tou_periods'][period]:
-                                dayWF = timeRange['fromDayOfWeek']
-                                dayWT =timeRange['toDayOfWeek']
-                                hourF = timeRange['fromHour']
-                                hourT = timeRange['toHour']
-                                minF = timeRange['fromMinute']
-                                minT = timeRange['toMinute']
-                            #if now.weekday() >= tarif_data['seasons'][season]['fromDayOfWeek'] and now.weekday() <= tarif_data['seasons'][season]['toDayOfWeek']:
-                            #    if now.hour >= tarif_data['seasons'][season]['fromHour'] and now.hour <= tarif_data['seasons'][season]['toHour']:
-                            #        if now.minute >= tarif_data['seasons'][season]['fromMinute'] and now.minute <= tarif_data['seasons'][season]['toMinute']:
-                            #            periodNow = period
-                            #            break
             if seasonNow in tarif_data['energy_charges']:
                 buyRateNow = tarif_data['energy_charges'][seasonNow][periodNow]
             else:
                 buyRateNow = tarif_data['energy_charges']['ALL']
-            #if seasonNow in tarif_data['sell_tariff']:
-            #    buyRateNow = tarif_data['sell_tariff'][seasonNow][periodNow]
-            #else:
-            #    buyRateNow = tarif_data['sell_tariff']['ALL']
 
             return seasonNow, periodNow, buyRateNow
         except Exception as E:

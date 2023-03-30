@@ -61,8 +61,15 @@
 
   <editor id = "TIMESET" > 
      <range  uom="58" min="0" max="86400" prec="0" />
-
   </editor>
-
+  <editor id = "SEASON" > 
+     <range  uom="25" subset="0-2,99" nls="SEASON" />
+  </editor>
+   <editor id = "PERIOD" > 
+     <range  uom="25" subset="0-2,99" nls="PERIOD" />
+  </editor>
+  <editor id = "DOLLAR" > 
+     <range  uom="103" min="0" max="5" prec="2" />
+  </editor>  
 
 </editors> 
