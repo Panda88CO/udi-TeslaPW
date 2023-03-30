@@ -33,6 +33,7 @@ class teslaPWStatusNode(udi_interface.Node):
         logging.debug('stop - Cleaning up')
     
     def season2ISY(self, season):
+        logging.debug('season2ISY {}'.format(season))
         if season.upper() == 'WINTER':
             return(0)
         elif season.upper() == 'SUMMER':
@@ -44,6 +45,7 @@ class teslaPWStatusNode(udi_interface.Node):
         
 
     def period2ISY(self, period):
+        logging.debug('period2ISY {}'.format(period))
         if period.upper() == 'OFF_PEAK':
             return(0)
         elif period.upper() == 'PERTIAL_PEAK':
@@ -94,7 +96,7 @@ class teslaPWStatusNode(udi_interface.Node):
                 logging.debug('GV21 ={} ,GV23= {},GV24={}'.format(rate, period, season) )    
                 self.setDriver('GV21',round(rate,2))
                 self.setDriver('GV23',self.period2ISY(period))
-                self.setDriver('GV24',self.season2ISY(period))
+                self.setDriver('GV24',self.season2ISY(season))
         else:
             logging.debug('System not ready yet')
 
