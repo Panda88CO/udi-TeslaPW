@@ -46,6 +46,10 @@ ST-nlspwstatus-GV17-NAME = Grid Service Power Today
 ST-nlspwstatus-GV18-NAME = Grid Service Power Yesterday
 ST-nlspwstatus-GV19-NAME = Solar Power Today
 ST-nlspwstatus-GV20-NAME = Solar Power Yesterday
+ST-nlspwstatus-GV21-NAME = Utility Pwr cost
+ST-nlspwstatus-GV23-NAME = Utility Period
+ST-nlspwstatus-GV24-NAME = Utility Season
+
 SEASON-0 = Winter
 SEASON-1 = SUMMER
 SEASON-2 = BETWEEN SUmmer and Winter
