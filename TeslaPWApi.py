@@ -259,36 +259,39 @@ class TeslaPWApi():
             seasonFound = False
             for season in tarif_data['seasons']:
       
-                monthF = tarif_data['seasons'][season]['fromMonth']
-                monthT = tarif_data['seasons'][season]['toMonth']
-                dayF = tarif_data['seasons'][season]['fromDay'] 
-                dayT = tarif_data['seasons'][season]['toDay'] 
-                if  (monthF <= monthT and (now.month  >= monthF and now.month <= monthT)) or ( monthF > monthT and (now.month  >= monthF or now.month <= monthT)): 
-                        if now.month == monthF:
-                            seasonFound =  now.day >= dayF
-                        elif now.month == monthT:
-                            seasonFound =   now.day <= dayT
+                monthFrom = tarif_data['seasons'][season]['fromMonth']
+                monthTo = tarif_data['seasons'][season]['toMonth']
+                dayFrom = tarif_data['seasons'][season]['fromDay'] 
+                dayTo = tarif_data['seasons'][season]['toDay'] 
+                logging.debug('season {} - months {} {} days {}{}'.format(season, monthFrom, monthTo, dayFrom, dayTo ))
+                if  (monthFrom <= monthTo and (int(now.month)  >= monthFrom and now.month <= monthTo)) or ( monthFrom > monthTo and (now.month  >= monthFrom or now.month <= monthTo)): 
+                        if now.month == monthFrom:
+                            seasonFound =  now.day >= dayFrom
+                        elif now.month == monthTo:
+                            seasonFound =   now.day <= dayTo
                         else:
-                            seasonFound =  True                                                                 
+                            seasonFound =  True                                                               
                 if seasonFound:
                     seasonNow = season     
                     break
             periodFound = False
-            for period in tarif_data['seasons'][seasonNow]['tou_periods']:                
+            for period in tarif_data['seasons'][seasonNow]['tou_periods']:   
+                logging.debug('period {}  season {}'.format(period,seasonNow))
+
                 for timeRange in tarif_data['seasons'][seasonNow]['tou_periods'][period]:
-                    wdayF = timeRange['fromDayOfWeek']
-                    wdayT =timeRange['toDayOfWeek']
-                    hourF = timeRange['fromHour']
-                    hourT = timeRange['toHour']
-                    minF = timeRange['fromMinute']
-                    minT = timeRange['toMinute']    
+                    wdayFrom = timeRange['fromDayOfWeek']
+                    wdayTo =timeRange['toDayOfWeek']
+                    hourFrom = timeRange['fromHour']
+                    hourTo = timeRange['toHour']
+                    minFrom = timeRange['fromMinute']
+                    minTo = timeRange['toMinute']    
              
-                    if wdayF <= wdayT and ( wdayF <= now.weekday() and wdayT >= now.weekday()) or (wdayT <= wdayF and ( wdayF >= now.weekday() or wdayT <= now.weekday())):
-                        if (hourF <= hourT and (now.hour >= hourF and now.hour <= hourT)) or (hourF > hourT and (now.hour >= hourF or now.hour <= hourT)):
-                            if now.hour == hourF:
-                                periodFound = now.min > minF
-                            elif now.hour == hourT:
-                                periodFound = now.min < minT
+                    if wdayFrom <= wdayTo and ( wdayFrom <= now.weekday() and wdayTo >= now.weekday()) or (wdayTo <= wdayFrom and ( wdayFrom >= now.weekday() or wdayTo <= now.weekday())):
+                        if (hourFrom <= hourTo and (now.hour >= hourFrom and now.hour <= hourTo)) or (hourFrom > hourTo and (now.hour >= hourFrom or now.hour <= hourTo)):
+                            if now.hour == hourFrom:
+                                periodFound = now.min > minFrom
+                            elif now.hour == hourTo:
+                                periodFound = now.min < minTo
                             else:
                                 periodFound = True
                     if periodFound:
@@ -303,7 +306,7 @@ class TeslaPWApi():
             return seasonNow, periodNow, buyRateNow
         except Exception as E:
             logging.error('TeslaGet_current_state Exception: {}'.format(E))
-            return 99, 99, 0
+            return None, None, 0
 
     def peak_info(self):
         logging.debug('peak_info')
