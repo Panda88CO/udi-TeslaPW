@@ -32,12 +32,36 @@ class teslaPWStatusNode(udi_interface.Node):
     def stop(self):
         logging.debug('stop - Cleaning up')
     
+    def season2ISY(self, season):
+        logging.debug('season2ISY {}'.format(season))
+        if season.upper() == 'WINTER':
+            return(0)
+        elif season.upper() == 'SUMMER':
+            return(1)
+        elif season != None:
+            return(2)
+        else:
+            return (99)
+        
+
+    def period2ISY(self, period):
+        logging.debug('period2ISY {}'.format(period))
+        if period.upper() == 'OFF_PEAK':
+            return(0)
+        elif period.upper() == 'PERTIAL_PEAK':
+            return(1)
+        elif period.upper() == 'PEAK':
+            return(2)
+        else:
+            return (99) 
+
     def updateISYdrivers(self, level):
         if self.TPW.systemReady:
 
             logging.debug('StatusNode updateISYdrivers')
-            logging.debug('GV0: '+ str(self.TPW.getTPW_backup_time_remaining()))
-            self.setDriver('GV0', round(self.TPW.getTPW_backup_time_remaining(),2))
+            tmp = self.TPW.getTPW_backup_time_remaining()
+            logging.debug('GV0: {}'.format(tmp))
+            self.setDriver('GV0', round(tmp,2))
             logging.debug('GV1: '+ str(self.TPW.getTPW_chargeLevel()))
             self.setDriver('GV1', self.TPW.getTPW_chargeLevel())
             logging.debug('GV2: '+ str(self.TPW.getTPW_operationMode()))
@@ -54,7 +78,7 @@ class teslaPWStatusNode(udi_interface.Node):
             self.setDriver('GV9', self.TPW.getTPW_gridSupply())
             logging.debug('GV12: '+ str(self.TPW.getTPW_load()))
             self.setDriver('GV12', self.TPW.getTPW_load())
-
+            
             if level == 'all':
                 self.setDriver('GV7', self.TPW.getTPW_daysBattery())
                 self.setDriver('GV8', self.TPW.getTPW_yesterdayBattery())
@@ -67,7 +91,12 @@ class teslaPWStatusNode(udi_interface.Node):
                 self.setDriver('GV17', self.TPW.getTPW_daysGridServicesUse())
                 self.setDriver('GV18', self.TPW.getTPW_yesterdayGridServicesUse())
                 self.setDriver('GV17', self.TPW.getTPW_daysSolar())
-                self.setDriver('GV20', self.TPW.getTPW_yesterdaySolar())                
+                self.setDriver('GV20', self.TPW.getTPW_yesterdaySolar())    
+                season, period, rate = self.TPW.getTPW_tariff_rate_state()
+                logging.debug('GV21 ={} ,GV23= {},GV24={}'.format(rate, period, season) )    
+                self.setDriver('GV21',round(rate,2))
+                self.setDriver('GV23',self.period2ISY(period))
+                self.setDriver('GV24',self.season2ISY(season))
         else:
             logging.debug('System not ready yet')
 
@@ -106,6 +135,12 @@ class teslaPWStatusNode(udi_interface.Node):
             {'driver': 'GV18', 'value': 0, 'uom': 33}, #grid service yesterday
             {'driver': 'GV19', 'value': 0, 'uom': 33}, #Solar today
             {'driver': 'GV20', 'value': 0, 'uom': 33}, #Solar yesterday
+            {'driver': 'GV20', 'value': 0, 'uom': 33}, #Solar yesterday
+            {'driver': 'GV21', 'value': 0, 'uom': 103}, #Current buy rate
+            #{'driver': 'GV22', 'value': 0, 'uom': 103}, #Current sell rate
+            {'driver': 'GV23', 'value': 99, 'uom': 25}, #Peak/Partial/offpeak
+            {'driver': 'GV24', 'value': 99, 'uom': 25}, #Summer/Winter
+           
            
             ]
 

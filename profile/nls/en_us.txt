@@ -46,8 +46,19 @@ ST-nlspwstatus-GV17-NAME = Grid Service Power Today
 ST-nlspwstatus-GV18-NAME = Grid Service Power Yesterday
 ST-nlspwstatus-GV19-NAME = Solar Power Today
 ST-nlspwstatus-GV20-NAME = Solar Power Yesterday
+ST-nlspwstatus-GV21-NAME = Utility Electricy cost (/kWh)
+ST-nlspwstatus-GV23-NAME = Utility Period
+ST-nlspwstatus-GV24-NAME = Utility Season
 
+SEASON-0 = Winter
+SEASON-1 = SUMMER
+SEASON-2 = BETWEEN SUmmer and Winter
+SEASON-99 = Unknown
 
+PERIOD-0 = Off-peak
+PERIOD-1 = Partial-Peak
+PERIOD-2 = Peak
+PERIOD-99 = Unknown
 ND-pwsolar-NAME = Power Wall Solar Status
 ND-pwsolar-ICON = Electricity
 CMD-nlspwsolar-UPDATE-NAME = Update System Data

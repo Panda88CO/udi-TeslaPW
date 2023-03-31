@@ -42,6 +42,9 @@
          <st id="GV18" editor="KWH" />
          <st id="GV19" editor="KWH" />
          <st id="GV20" editor="KWH" />
+         <st id="GV21" editor="DOLLAR" />
+         <st id="GV23" editor="PERIOD" />
+         <st id="GV24" editor="SEASON" />
 
       </sts>
       <cmds>

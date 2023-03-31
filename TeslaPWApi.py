@@ -36,6 +36,7 @@ class TeslaPWApi():
         self.products = {}
         self.site_id = ''
         self.Header= {'Accept':'application/json'}
+        #self.tarif_data = {}
         #self.battery_id = ''
         #self.teslaAuth = TPWauth(self.email, self.password)
 
@@ -241,13 +242,82 @@ class TeslaPWApi():
             try:
                 s.auth = OAuth2BearerToken(S['access_token'])   
                 r = s.get(self.TESLA_URL + self.API+ '/energy_sites'+self.site_id +'/tariff_rate', headers=self.Header)          
-                self.tariff_rate = r.json()
-                return(self.tariff_rate)
+                tariff_data = r.json()
+                return(tariff_data['response'])
             except Exception as e:
                 logging.error('Exception teslaGetSiteInfo: ' + str(e))
                 logging.error('Trying to reconnect')
                 self.teslaApi.tesla_refresh_token( )
-                return(None)          
+                return(None)    
+
+
+    def TeslaGet_current_rate_state(self):
+        logging.debug('get_current_state')
+        try:
+            now = datetime.now()
+            tarif_data = self.teslaGet_tariff_rate()
+            seasonFound = False
+            for season in tarif_data['seasons']:
+      
+                monthFrom = tarif_data['seasons'][season]['fromMonth']
+                monthTo = tarif_data['seasons'][season]['toMonth']
+                dayFrom = tarif_data['seasons'][season]['fromDay'] 
+                dayTo = tarif_data['seasons'][season]['toDay'] 
+                #logging.debug('season {} - months {} {} days {}{}'.format(season, monthFrom, monthTo, dayFrom, dayTo ))
+                if  (monthFrom <= monthTo and (int(now.month)  >= monthFrom and now.month <= monthTo)) or ( monthFrom > monthTo and (now.month  >= monthFrom or now.month <= monthTo)): 
+                        if now.month == monthFrom:
+                            seasonFound =  now.day >= dayFrom
+                        elif now.month == monthTo:
+                            seasonFound =   now.day <= dayTo
+                        else:
+                            seasonFound =  True                                                               
+                if seasonFound:
+                    seasonNow = season     
+                    break
+            periodFound = False
+            for period in tarif_data['seasons'][seasonNow]['tou_periods']:   
+                #logging.debug('period {}  season {}'.format(period,seasonNow))
+
+                for timeRange in tarif_data['seasons'][seasonNow]['tou_periods'][period]:
+                    wdayFrom = timeRange['fromDayOfWeek']
+                    wdayTo =timeRange['toDayOfWeek']
+                    hourFrom = timeRange['fromHour']
+                    hourTo = timeRange['toHour']
+                    minFrom = timeRange['fromMinute']
+                    minTo = timeRange['toMinute']    
+             
+                    if wdayFrom <= wdayTo and ( wdayFrom <= now.weekday() and wdayTo >= now.weekday()) or (wdayTo <= wdayFrom and ( wdayFrom >= now.weekday() or wdayTo <= now.weekday())):
+                        if (hourFrom <= hourTo and (now.hour >= hourFrom and now.hour <= hourTo)) or (hourFrom > hourTo and (now.hour >= hourFrom or now.hour <= hourTo)):
+                            if now.hour == hourFrom:
+                                periodFound = now.min > minFrom
+                            elif now.hour == hourTo:
+                                periodFound = now.min < minTo
+                            else:
+                                periodFound = True
+                    if periodFound:
+                        periodNow = period
+                        break
+
+            if seasonNow in tarif_data['energy_charges']:
+                buyRateNow = tarif_data['energy_charges'][seasonNow][periodNow]
+            else:
+                buyRateNow = tarif_data['energy_charges']['ALL']
+
+            return seasonNow, periodNow, buyRateNow
+        except Exception as E:
+            logging.error('TeslaGet_current_state Exception: {}'.format(E))
+            return None, None, 0
+
+    def peak_info(self):
+        logging.debug('peak_info')
+
+    def get_current_buy_price(self):
+        logging.debug('get_current_buy_price')
+
+    def get_current_sell_price(self):
+        logging.debug('get_current_sell_price')
+
+
 
     def teslaGetSiteInfo(self, mode):
         #if self.connectionEstablished:
