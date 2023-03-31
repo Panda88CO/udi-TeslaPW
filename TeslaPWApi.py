@@ -263,7 +263,7 @@ class TeslaPWApi():
                 monthTo = tarif_data['seasons'][season]['toMonth']
                 dayFrom = tarif_data['seasons'][season]['fromDay'] 
                 dayTo = tarif_data['seasons'][season]['toDay'] 
-                logging.debug('season {} - months {} {} days {}{}'.format(season, monthFrom, monthTo, dayFrom, dayTo ))
+                #logging.debug('season {} - months {} {} days {}{}'.format(season, monthFrom, monthTo, dayFrom, dayTo ))
                 if  (monthFrom <= monthTo and (int(now.month)  >= monthFrom and now.month <= monthTo)) or ( monthFrom > monthTo and (now.month  >= monthFrom or now.month <= monthTo)): 
                         if now.month == monthFrom:
                             seasonFound =  now.day >= dayFrom
@@ -276,7 +276,7 @@ class TeslaPWApi():
                     break
             periodFound = False
             for period in tarif_data['seasons'][seasonNow]['tou_periods']:   
-                logging.debug('period {}  season {}'.format(period,seasonNow))
+                #logging.debug('period {}  season {}'.format(period,seasonNow))
 
                 for timeRange in tarif_data['seasons'][seasonNow]['tou_periods'][period]:
                     wdayFrom = timeRange['fromDayOfWeek']
