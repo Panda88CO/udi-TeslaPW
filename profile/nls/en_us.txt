@@ -22,15 +22,9 @@ CMD-nlspwstatus-UPDATE-NAME = Update System Data
 ST-nlspwstatus-GV0-NAME = Estimated backup Time
 ST-nlspwstatus-GV1-NAME = Battery Charge Level
 ST-nlspwstatus-GV2-NAME = Operation Mode
-
 ST-nlspwstatus-GV3-NAME = Grid Status
-
 ST-nlspwstatus-GV4-NAME = Connected to Tesla
-ON_LIBE-0 = False
-PWSTATUS4-1 = True
 ST-nlspwstatus-GV5-NAME = Grid Services Active
-PWSTATUS5-0 = False
-PWSTATUS5-1 = True
 ST-nlspwstatus-GV6-NAME = Current Battery Supply
 ST-nlspwstatus-GV7-NAME = Battery Power Today
 ST-nlspwstatus-GV8-NAME = Battery Power Yesterday
