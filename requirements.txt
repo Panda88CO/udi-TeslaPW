@@ -1,4 +1,4 @@
 requests_oauth2>=0.3.0
 udi_interface>=3.0.46
 requests>=2.27.1
-tesla-powerwall=0.3.19
+tesla-powerwall==0.3.19
