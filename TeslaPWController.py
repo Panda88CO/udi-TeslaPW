@@ -366,7 +366,6 @@ class TeslaPWController(udi_interface.Node):
             logging.error('Wrong parameter passed: ' + str(level))
 
 
-
     def ISYupdate (self, command):
         logging.debug('ISY-update called')
         self.longPoll()
