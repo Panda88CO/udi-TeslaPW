@@ -712,7 +712,11 @@ class TeslaPWApi():
         return(True)
 
     def teslaExtractGridServiceActive(self):
-        if self.site_live['grid_services_active']: 
-            return(1)
-        else:
-            return(0)
+        try:
+            if self.site_info['grid_services_enabled']: 
+            #if self.site_info['grid_services_active']:     
+                return(1)
+            else:
+                return(0)
+        except:
+            return (99)
